@@ -62,6 +62,8 @@ const answers = [
   '{userName}におすすめのキャラはウェンティです。ウェンティの元素爆発の強さは{userName}の日々の探索を楽にしてくれるでしょう。',
   '{userName}におすすめのキャラは趙です。趙の落下攻撃は{userName}が行くどの秘境でも活躍する事でしょう。',
   '{userName}におすすめのキャラは鍾離。{userName}にとって鍾離のシールドは必要不可欠な存在になるでしょう。',
+  '{userName}におすすめのキャラは珊瑚宮心海。珊瑚宮心海の圧倒的な回復力は{userName}にとってどんな敵にも立ち向かえるようにしてくれるでしょう。',
+  '{userName}におすすめのキャラはタルタリヤ。{userName}にとってタルタリヤの攻撃の爽快感は原神を楽しませてくれるでしょう。',
 ];
 
 var img = [];
@@ -74,6 +76,8 @@ const images = [
   img[5] = 'https://github.com/yupinz123/assessment/blob/main/Venti.png?raw=true',
   img[6] = 'https://github.com/yupinz123/assessment/blob/main/Xiao.png?raw=true',
   img[7] = 'https://github.com/yupinz123/assessment/blob/main/Zhongli.png?raw=true',
+  img[8] = 'https://github.com/yupinz123/assessment/blob/main/Sangonomiya%20Kokomi.png?raw=true',
+  img[9] = 'https://github.com/yupinz123/assessment/blob/main/Tartaglia.png?raw=true',
 ];
 
 /**
