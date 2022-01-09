@@ -22,10 +22,10 @@ assessmentButton.onclick = () => {
   paragraph.innerText = result[0];
   resultDivided.appendChild(paragraph);
 
-  const png = document.createElement('img');
+  const img = document.createElement('img');
   const index = result[1];
   img.src = images[index]
-  resultDivided.appendChild(png);
+  resultDivided.appendChild(img);
 
   // ツイートエリアの作成
   tweetDivided.innerText = "";
@@ -38,6 +38,7 @@ assessmentButton.onclick = () => {
   anchor.className = 'twitter-hashtag-button';
   anchor.setAttribute('data-text', result[0]);
   anchor.innerText = 'Tweet #あなたの使うべき原神キャラ';
+  anchor.setAttribute('data-url', 'https:/yupinz123.github.io/assessmentassessment.html');
   tweetDivided.appendChild(anchor);
 
   // widgets.js の設定
