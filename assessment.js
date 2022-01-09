@@ -38,7 +38,7 @@ assessmentButton.onclick = () => {
   anchor.className = 'twitter-hashtag-button';
   anchor.setAttribute('data-text', result[0]);
   anchor.innerText = 'Tweet #あなたの使うべき原神キャラ';
-  anchor.setAttribute('data-url', 'https:/yupinz123.github.io/assessmentassessment.html');
+  anchor.setAttribute('data-url', 'https://yupinz123.github.io/assessment/assessment.html');
   tweetDivided.appendChild(anchor);
 
   // widgets.js の設定
