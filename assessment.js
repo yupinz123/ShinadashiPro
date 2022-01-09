@@ -36,7 +36,7 @@ assessmentButton.onclick = () => {
     '&ref_src=twsrc%5Etfw';
   anchor.setAttribute('href', hrefValue);
   anchor.className = 'twitter-hashtag-button';
-  anchor.setAttribute('data-text', result);
+  anchor.setAttribute('data-text', result[0]);
   anchor.innerText = 'Tweet #あなたの使うべき原神キャラ';
   tweetDivided.appendChild(anchor);
 
@@ -93,15 +93,4 @@ function assessment(userName) {
 
   result = result.replaceAll('{userName}', userName);
   return [result, index];;
-}
-
-// テストコード
-console.assert(
-  assessment('太郎') ===
-    '太郎のいいところは決断力です。太郎がする決断にいつも助けられる人がいます。',
-  '診断結果の文言の特定の部分を名前に置き換える処理が正しくありません。'
-);
-console.assert(
-  assessment('太郎') === assessment('太郎'),
-  '入力が同じ名前なら同じ診断結果を出力する処理が正しくありません。'
-);
+};
