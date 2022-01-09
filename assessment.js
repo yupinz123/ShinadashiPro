@@ -66,14 +66,14 @@ const answers = [
 
 var img = [];
 const images = [
-  img[0] = 'https://yupinz123.github.io/assessment/Ganyu.png',
-  img[1] = 'https://yupinz123.github.io/assessment/Hu Tao.png',
-  img[2] = 'https://yupinz123.github.io/assessment/Kaedehara Kazuha.png',
-  img[3] = 'https://yupinz123.github.io/assessment/Kamisato Ayaka.png',
-  img[4] = 'https://yupinz123.github.io/assessment/Raiden Shogun.png',
-  img[5] = 'https://yupinz123.github.io/assessment/Venti.png',
-  img[6] = 'https://yupinz123.github.io/assessment/Xiao.png',
-  img[7] = 'https://yupinz123.github.io/assessment/Zhongli.png',
+  img[0] = 'https://github.com/yupinz123/assessment/blob/main/Ganyu.png?raw=true',
+  img[1] = 'https://github.com/yupinz123/assessment/blob/main/Hu%20Tao.png?raw=true',
+  img[2] = 'https://github.com/yupinz123/assessment/blob/main/Kaedehara%20Kazuha.png?raw=true',
+  img[3] = 'https://github.com/yupinz123/assessment/blob/main/Kamisato%20Ayaka.png?raw=true',
+  img[4] = 'https://github.com/yupinz123/assessment/blob/main/Raiden%20Shogun.png?raw=true',
+  img[5] = 'https://github.com/yupinz123/assessment/blob/main/Venti.png?raw=true',
+  img[6] = 'https://github.com/yupinz123/assessment/blob/main/Xiao.png?raw=true',
+  img[7] = 'https://github.com/yupinz123/assessment/blob/main/Zhongli.png?raw=true',
 ];
 
 /**
