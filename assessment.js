@@ -19,8 +19,13 @@ assessmentButton.onclick = () => {
 
   const paragraph = document.createElement('p');
   const result = assessment(userName);
-  paragraph.innerText = result;
+  paragraph.innerText = result[0];
   resultDivided.appendChild(paragraph);
+
+  const png = document.createElement('img');
+  const index = result[1];
+  img.src = images[index]
+  resultDivided.appendChild(png);
 
   // ツイートエリアの作成
   tweetDivided.innerText = "";
