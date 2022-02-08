@@ -64,6 +64,7 @@ const answers = [
   '{userName}におすすめのキャラは鍾離。{userName}にとって鍾離のシールドは必要不可欠な存在になるでしょう。',
   '{userName}におすすめのキャラは珊瑚宮心海。珊瑚宮心海の圧倒的な回復力は{userName}にとってどんな敵にも立ち向かえるようにしてくれるでしょう。',
   '{userName}におすすめのキャラはタルタリヤ。{userName}にとってタルタリヤの攻撃の爽快感は原神を楽しませてくれるでしょう。',
+  '{userName}におすすめのキャラは八重神子。八重神子の元素スキルと元素爆発で{userName}のチーム全体の火力が上がるでしょう。',
 ];
 
 var img = [];
@@ -78,6 +79,7 @@ const images = [
   img[7] = 'https://github.com/yupinz123/assessment/blob/main/Zhongli.png?raw=true',
   img[8] = 'https://github.com/yupinz123/assessment/blob/main/Sangonomiya%20Kokomi.png?raw=true',
   img[9] = 'https://github.com/yupinz123/assessment/blob/main/Tartaglia.png?raw=true',
+  img[10] = 'https://github.com/yupinz123/assessment/blob/main/Yae%20Miko.png?raw=true',
 ];
 
 /**
