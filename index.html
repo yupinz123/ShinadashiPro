@@ -671,18 +671,27 @@
 
         // Screen & Navigation
         function showScreen(screenId) {
-    const screens = ['category-screen', 'home-screen', 'tasks-screen', 'settings-screen'];
-    screens.forEach(id => document.getElementById(id).classList.add('hidden'));
-    document.getElementById(screenId).classList.remove('hidden');
+            screens.forEach(id => document.getElementById(id).classList.add('hidden'));
+            document.getElementById(screenId).classList.remove('hidden');
+            
+            // 最初のカテゴリ選択画面ではナビゲーションボタン非表示
+            if (screenId === 'category-screen') {
+                document.getElementById('nav-buttons').classList.add('hidden');
+            } else {
+                document.getElementById('nav-buttons').classList.remove('hidden');
+            }
 
-    // 商品一覧ボタンが常に表示されるように修正
-    const navButtons = document.getElementById('nav-buttons');
-    if (screenId === 'category-screen') {
-        navButtons.classList.add('hidden'); // カテゴリ選択画面では非表示
-    } else {
-        navButtons.classList.remove('hidden'); // 他の画面では表示
-    }
-}
+            navButtons.forEach(id => document.getElementById(id).classList.remove('active'));
+            const buttonId = screenId.replace('-screen', '-button');
+            const button = document.getElementById(buttonId);
+            if (button) button.classList.add('active');
+
+            // タイトル
+            const titles = { 'category-screen': '商品陳列管理アシスタント', 'home-screen': '商品一覧', 'tasks-screen': 'タスクリスト', 'settings-screen': '設定' };
+            document.getElementById('page-title').innerText = titles[screenId];
+
+            // ★修正点2: 画面表示のロジックから、カテゴリ切り替えボタンに関する処理を完全に削除しました。
+        }
 
         // ★修正点3: 不要になった古いイベントリスナーを削除しました。
         // 新しいボタンのイベントは renderHome() 内で設定されます。
