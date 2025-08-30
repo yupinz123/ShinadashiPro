@@ -1,2 +1,2 @@
-# assessment
-あなたの使うべき原神キャラ診断
+# ShinadashiPro
+商品陳列ツール
