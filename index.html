@@ -119,6 +119,39 @@
             align-items: center;
             justify-content: center;
         }
+        /* ヘッダー調整: タイトルが長すぎてナビを押し出さないように */
+        .title-wrap {
+            display: flex;
+            flex-direction: column;
+            line-height: 1;
+            flex: 1 1 auto; /* タイトルが可変幅を取るように */
+            min-width: 0; /* 子のテキストがオーバーフローしても縮められるように */
+            overflow: hidden;
+        }
+        .title-wrap .main-title {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 0;
+        }
+        #nav-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex: 0 0 auto; /* ボタン群は縮めすぎない */
+        }
+        .nav-button {
+            flex-shrink: 0; /* ボタン自体は縮小しない（幅はメディアクエリで調整） */
+        }
+
+        /* 小さい幅のデバイスではボタン幅を小さくして押し出しを防ぐ */
+        @media (max-width: 420px) {
+            .nav-button {
+                min-width: 64px;
+                padding: 0.4rem 0.8rem;
+                font-size: 0.88rem;
+            }
+            .header .subtitle { display: none; }
+        }
         .nav-button.active, .nav-button:hover {
             background: linear-gradient(90deg, #3b82f6 0%, #6366f1 100%);
             box-shadow: 0 4px 16px 0 rgba(59,130,246,0.13);
