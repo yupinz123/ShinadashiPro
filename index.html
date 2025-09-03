@@ -335,7 +335,10 @@
         </div>
 
         <div id="settings-screen" class="hidden">
-            <h2 class="text-xl font-semibold mb-4 text-gray-800">商品の設定</h2>
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-gray-800">商品の設定</h2>
+                <button id="settings-mode-toggle" class="ml-4 px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-semibold">編集モード</button>
+            </div>
             <button id="reset-all-button" class="mb-6 w-full bg-gray-300 text-gray-800 font-semibold py-3 rounded-xl shadow-lg transition hover:bg-gray-400">タスクとカウントをリセット</button>
             <div id="settings-list" class="space-y-6"></div>
             <button id="add-new-item-button" class="mt-8 w-full bg-green-500 text-white font-semibold py-3 rounded-xl shadow-lg transition hover:bg-green-600">新しい商品を追加</button>
@@ -428,6 +431,30 @@
         const navButtons = ['home-button', 'tasks-button', 'settings-button'];
         const localStorageKeyPrefix = 'merchandisingAppProducts_';
         const localStorageDataKey = 'merchandisingAppData';
+        // 設定画面のモード: 'edit' or 'reorder'（初期は編集）
+        let settingsMode = 'edit';
+
+        function setSettingsMode(mode) {
+            settingsMode = mode;
+            const btn = document.getElementById('settings-mode-toggle');
+            if (btn) {
+                if (settingsMode === 'edit') {
+                    btn.innerText = '編集モード';
+                    btn.classList.remove('bg-yellow-100');
+                    btn.classList.add('bg-blue-100');
+                    btn.classList.remove('text-yellow-800');
+                    btn.classList.add('text-blue-700');
+                } else {
+                    btn.innerText = '並び替えモード';
+                    btn.classList.remove('bg-blue-100');
+                    btn.classList.add('bg-yellow-100');
+                    btn.classList.remove('text-blue-700');
+                    btn.classList.add('text-yellow-800');
+                }
+            }
+            // 再描画
+            if (typeof renderSettings === 'function') renderSettings();
+        }
 
         // --- 初期データ（drinks/paper/カテゴリ/陳列場所） ---
         const initialData = {
@@ -713,6 +740,14 @@
                     if (confirm('本当にデータを元の状態に戻しますか？（削除・追加した商品はすべて初期状態に戻ります）')) {
                         restoreInitialData();
                     }
+                });
+            }
+
+            // 設定モード切替ボタン
+            const settingsToggleBtn = document.getElementById('settings-mode-toggle');
+            if (settingsToggleBtn) {
+                settingsToggleBtn.addEventListener('click', () => {
+                    setSettingsMode(settingsMode === 'edit' ? 'reorder' : 'edit');
                 });
             }
         });
@@ -1103,6 +1138,7 @@
                 return acc;
             }, {});
             
+            
             // Render location sections based on the fixed order
             locationOrder.forEach(location => {
                 if (groupedProducts[location] && groupedProducts[location].length > 0) {
@@ -1123,9 +1159,9 @@
                                 <img src="${product.imageUrl}" alt="${product.name}" class="w-10 h-10 rounded mr-4" onerror="this.src='https://placehold.co/120x120/94A3B8/FFFFFF?text=No+Image';">
                                 <span class="font-medium text-gray-800">${product.name}</span>
                             </div>
-                            <div class="flex space-x-2">
-                                <button class="edit-button bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm font-semibold transition hover:bg-blue-200" data-id="${product.id}">編集</button>
-                                <button class="delete-button bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold transition hover:bg-red-200" data-id="${product.id}">削除</button>
+                            <div class="flex space-x-2 settings-action-area">
+                                ${settingsMode === 'edit' ? `<button class="edit-button bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm font-semibold transition hover:bg-blue-200" data-id="${product.id}">編集</button>
+                                <button class="delete-button bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold transition hover:bg-red-200" data-id="${product.id}">削除</button>` : ''}
                             </div>
                         `;
                         itemListDiv.appendChild(itemDiv);
@@ -1136,98 +1172,107 @@
                 }
             });
 
-            // Settings画面のSortable.jsの初期化
+            // Settings画面のSortable.jsの初期化（並び替えモードのときのみ有効）
             const sortableLists = document.querySelectorAll('#settings-list .space-y-2');
             sortableLists.forEach(list => {
-                new Sortable(list, {
-                    group: 'shared',
-                    animation: 150,
-                    ghostClass: 'sortable-ghost',
-                    handle: '.drag-handle',
-                    onEnd: function (evt) {
-                        const fromLocation = evt.from.dataset.location;
-                        const toLocation = evt.to.dataset.location;
-                        
-                        // Check if the item was dropped into a different list (location)
-                        if (fromLocation !== toLocation) {
-                            showStatusMessage('陳列場所をまたいでの移動はできません。');
-                            renderAllScreens();
-                            return;
-                        }
-
-                        const productIdsInNewOrder = Array.from(evt.to.children).map(item => item.dataset.id);
-                        
-                        const productsInLocation = products.filter(p => p.location === fromLocation);
-                        const otherProducts = products.filter(p => p.location !== fromLocation);
-                        
-                        const newOrderedProducts = productIdsInNewOrder.map((id, index) => {
-                            const product = productsInLocation.find(p => p.id === id);
-                            if (product) {
-                                product.order = index;
+                // Destroy previous Sortable if exists by storing instance on element
+                if (list._sortableInstance && typeof list._sortableInstance.destroy === 'function') {
+                    try { list._sortableInstance.destroy(); } catch(e){}
+                }
+                if (settingsMode === 'reorder') {
+                    list._sortableInstance = new Sortable(list, {
+                        group: 'shared',
+                        animation: 150,
+                        ghostClass: 'sortable-ghost',
+                        handle: '.drag-handle',
+                        onEnd: function (evt) {
+                            const fromLocation = evt.from.dataset.location;
+                            const toLocation = evt.to.dataset.location;
+                            
+                            if (fromLocation !== toLocation) {
+                                showStatusMessage('陳列場所をまたいでの移動はできません。');
+                                renderAllScreens();
+                                return;
                             }
-                            return product;
-                        });
 
-                        products = [...otherProducts, ...newOrderedProducts].filter(Boolean);
-                        
-                        saveAppData();
-                        showStatusMessage('商品の順序を入れ替えました。');
-                        renderAllScreens();
-                    },
-                });
-            });
+                            const productIdsInNewOrder = Array.from(evt.to.children).map(item => item.dataset.id);
+                            
+                            const productsInLocation = products.filter(p => p.location === fromLocation);
+                            const otherProducts = products.filter(p => p.location !== fromLocation);
+                            
+                            const newOrderedProducts = productIdsInNewOrder.map((id, index) => {
+                                const product = productsInLocation.find(p => p.id === id);
+                                if (product) {
+                                    product.order = index;
+                                }
+                                return product;
+                            });
 
-            // Edit button listeners
-            document.querySelectorAll('.edit-button').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const id = e.target.dataset.id;
-                    const product = products.find(p => p.id === id);
-                    if (product) {
-                        editingProductId = id;
-                        document.getElementById('modal-title').innerText = '商品編集';
-                        populateModalOptions(); // 先に選択肢を生成
-                        document.getElementById('item-name').value = product.name;
-                        document.getElementById('item-image').value = product.imageUrl;
-                        document.getElementById('item-category').value = product.category; // ここで現在値をセット
-                        document.getElementById('item-location').value = product.location; // ここで現在値をセット
-                        document.getElementById('item-box-count').value = product.boxCount;
-                        document.getElementById('modal-container').classList.remove('hidden');
-                    }
-                });
-            });
-
-            // Delete button listeners
-            document.querySelectorAll('.delete-button').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    // Custom modal for confirmation
-                    const modalDiv = document.createElement('div');
-                    modalDiv.className = 'modal';
-                    modalDiv.innerHTML = `
-                        <div class="modal-content">
-                            <h2 class="text-xl font-bold mb-4">確認</h2>
-                            <p>この商品を削除してもよろしいですか？</p>
-                            <div class="mt-4 flex justify-end space-x-2">
-                                <button id="cancel-delete" class="px-4 py-2 bg-gray-200 rounded-md">キャンセル</button>
-                                <button id="confirm-delete" class="px-4 py-2 bg-red-500 text-white rounded-md">削除</button>
-                            </div>
-                        </div>
-                    `;
-                    document.body.appendChild(modalDiv);
-                    
-                    document.getElementById('cancel-delete').addEventListener('click', () => {
-                        document.body.removeChild(modalDiv);
+                            products = [...otherProducts, ...newOrderedProducts].filter(Boolean);
+                            
+                            saveAppData();
+                            showStatusMessage('商品の順序を入れ替えました。');
+                            renderAllScreens();
+                        },
                     });
-                    
-                    document.getElementById('confirm-delete').addEventListener('click', () => {
-                        document.body.removeChild(modalDiv);
+                } else {
+                    list._sortableInstance = null;
+                }
+            });
+
+            // Edit button listeners（編集モードのときのみ登録）
+            if (settingsMode === 'edit') {
+                document.querySelectorAll('.edit-button').forEach(button => {
+                    button.addEventListener('click', (e) => {
                         const id = e.target.dataset.id;
-                        products = products.filter(p => p.id !== id);
-                        saveAppData();
-                        renderAllScreens();
-                        showStatusMessage('商品を削除しました。', 'bg-red-500');
+                        const product = products.find(p => p.id === id);
+                        if (product) {
+                            editingProductId = id;
+                            document.getElementById('modal-title').innerText = '商品編集';
+                            populateModalOptions(); // 先に選択肢を生成
+                            document.getElementById('item-name').value = product.name;
+                            document.getElementById('item-image').value = product.imageUrl;
+                            document.getElementById('item-category').value = product.category; // ここで現在値をセット
+                            document.getElementById('item-location').value = product.location; // ここで現在値をセット
+                            document.getElementById('item-box-count').value = product.boxCount;
+                            document.getElementById('modal-container').classList.remove('hidden');
+                        }
                     });
                 });
-            });
+
+                // Delete button listeners
+                document.querySelectorAll('.delete-button').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        // Custom modal for confirmation
+                        const modalDiv = document.createElement('div');
+                        modalDiv.className = 'modal';
+                        modalDiv.innerHTML = `
+                            <div class="modal-content">
+                                <h2 class="text-xl font-bold mb-4">確認</h2>
+                                <p>この商品を削除してもよろしいですか？</p>
+                                <div class="mt-4 flex justify-end space-x-2">
+                                    <button id="cancel-delete" class="px-4 py-2 bg-gray-200 rounded-md">キャンセル</button>
+                                    <button id="confirm-delete" class="px-4 py-2 bg-red-500 text-white rounded-md">削除</button>
+                                </div>
+                            </div>
+                        `;
+                        document.body.appendChild(modalDiv);
+                        
+                        document.getElementById('cancel-delete').addEventListener('click', () => {
+                            document.body.removeChild(modalDiv);
+                        });
+                        
+                        document.getElementById('confirm-delete').addEventListener('click', () => {
+                            document.body.removeChild(modalDiv);
+                            const id = e.target.dataset.id;
+                            products = products.filter(p => p.id !== id);
+                            saveAppData();
+                            renderAllScreens();
+                            showStatusMessage('商品を削除しました。', 'bg-red-500');
+                        });
+                    });
+                });
+            }
             
             renderCategoryLocationManagement();
         }
