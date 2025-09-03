@@ -7,6 +7,25 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* --- 既存のCSSはそのまま --- */
+        @media (max-width: 768px) {
+            body {
+                font-size: 1.08rem;
+            }
+            .container {
+                padding: 0.7rem;
+            }
+            .header .logo-box {
+                width: 48px;
+                height: 48px;
+                font-size: 16px;
+            }
+            .header .title-wrap .main-title {
+                font-size: 18px;
+            }
+            .header .title-wrap .subtitle {
+                font-size: 10px;
+            }
+        }
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #e0e7ff 0%, #f3f4f6 100%);
