@@ -1,3 +1,13 @@
+.carried-task-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 0.7rem;
+  margin-left: auto;
+}
+.out-stock-item.carried {
+  filter: grayscale(100%);
+  opacity: 0.6;
+}
 .out-stock-item {
   display: flex;
   align-items: center;
