@@ -9,21 +9,22 @@
 <body>
   <header class="header" role="banner">
     <nav class="tabs" role="navigation" aria-label="カテゴリ切替">
-      <nav class="sub-tabs" role="navigation" aria-label="表示切替"></nav>
       <button id="tab-drinks" class="tab active" aria-pressed="true">飲料</button>
       <button id="tab-paper" class="tab" aria-pressed="false">紙類</button>
-      <button id="subtab-products" class="subtab active" aria-pressed="true">商品</button>
-      <button id="subtab-tasks" class="subtab" aria-pressed="false">タスク</button>
+      <nav class="sub-tabs" role="navigation" aria-label="表示切替">
+        <button id="subtab-products" class="subtab active" aria-pressed="true">商品</button>
+        <button id="subtab-tasks" class="subtab" aria-pressed="false">タスク</button>
+      </nav>
     </nav>
-    <div class="settings-area">
-      <button id="settings-btn" class="settings-btn" title="設定" aria-label="設定"><span aria-hidden="true">⚙️</span></button>
-    </div>
   </header>
   <div id="kutsuzawa-logo" class="kutsuzawa-logo" aria-hidden="true">
     <img src="KUTSUZAWA_rogo.jpg" alt="KUTSUZAWAロゴ" loading="lazy">
   </div>
   <main class="main" role="main">
     <div class="search-area">
+      <div class="settings-area">
+        <button id="settings-btn" class="settings-btn" title="設定" aria-label="設定"><span aria-hidden="true">⚙️</span></button>
+      </div>
       <input type="search" id="search-box" placeholder="商品名で検索" autocomplete="off" aria-label="商品名検索">
     </div>
     <section id="product-list" class="product-list" aria-label="商品一覧"></section>
@@ -31,6 +32,10 @@
     <div id="settings-modal" class="settings-modal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="settings-title">
       <div class="settings-modal-content">
         <h2 id="settings-title" class="settings-modal-title">設定</h2>
+        <div class="theme-toggle-area" style="margin-bottom:1.2rem;">
+          <label for="theme-toggle" style="font-weight:600; color:#2563eb; margin-right:0.7rem;">ダークモード</label>
+          <input type="checkbox" id="theme-toggle" style="width:1.2em; height:1.2em; vertical-align:middle;">
+        </div>
         <button id="reset-btn" class="reset-btn" aria-label="データリセット">データリセット</button>
         <button id="close-settings" class="close-settings" aria-label="閉じる">閉じる</button>
       </div>
