@@ -477,22 +477,13 @@ main {
     width: 80px;
   }
 }
-/* KUTSUZAWAロゴ 最下部スクロール時のみ表示 */
-.kutsuzawa-logo {
-  position: fixed;
-  left: 50%;
-  bottom: -120px;
-  transform: translateX(-50%);
-  z-index: 1000;
-  opacity: 0;
-  transition: bottom 0.5s, opacity 0.5s;
-  pointer-events: none;
+.settings-modal-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.2rem;
 }
-.kutsuzawa-logo.show {
-  bottom: 24px;
-  opacity: 1;
-}
-.kutsuzawa-logo img {
+.settings-modal-logo img {
   width: 120px;
   height: auto;
   filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2));
@@ -570,20 +561,23 @@ main {
   justify-content: center;
   z-index: 100;
 }
+/* 設定モーダル ダークモード対応 */
 .settings-modal-content {
-  background: #fff;
-  border-radius: 1.2rem;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border-radius: var(--border-radius);
   padding: 2rem 1.5rem 1.5rem 1.5rem;
   min-width: 260px;
   box-shadow: 0 2px 16px rgba(31,38,135,0.13);
   display: flex;
   flex-direction: column;
   align-items: center;
+  transition: background 0.3s, color 0.3s;
 }
 .settings-modal-title {
   font-size: 1.2rem;
   font-weight: 700;
-  color: #2563eb;
+  color: var(--text-secondary);
   margin-bottom: 1.2rem;
 }
 .reset-btn {
@@ -602,8 +596,8 @@ main {
   background: #dc2626;
 }
 .close-settings {
-  background: #e0e7ff;
-  color: #2563eb;
+  background: var(--tab-inactive);
+  color: var(--text-secondary);
   border: none;
   border-radius: 9999px;
   font-size: 1rem;
@@ -613,7 +607,7 @@ main {
   transition: background 0.2s, color 0.2s;
 }
 .close-settings:hover {
-  background: #6366f1;
+  background: var(--tab-active);
   color: #fff;
 }
 .product-card.touch-highlight {
