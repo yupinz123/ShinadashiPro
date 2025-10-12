@@ -1,906 +1,502 @@
-.body.dark-mode .task-name, body.dark-mode .task-item .task-name {
-  color: #fff !important;
-}
-.body.dark-mode .product-name, body.dark-mode .product-card .product-name {
-  color: #fff !important;
-}
-:root {
-  /* ライトモード */
-  --main-bg: #f3f4f6;
-  --header-bg: #2563eb;
-  --tab-active: #6366f1;
-  --tab-inactive: #e0e7ff;
-  --card-bg: #fff;
-  --carried-bg: #d1fae5;
-  --not-carried-bg: #fee2e2;
-  --out-stock-bg: #f3f4f6;
-  --border-radius: 1.2rem;
-  --transition: 0.2s;
-  --text-primary: #222;
-  --text-secondary: #2563eb;
-  --product-box-bg: #e3ecf9;
-  --product-box-color: #2563eb;
+// script.js - スーパー品出しSPA
+const CATEGORY_ORDER = ['お茶', '水', 'ジュース', '炭酸', '大型飲料', 'コーヒー', 'その他', 'キッチン', 'ティッシュ', 'トイレットペーパー'];
+const TAB_FILES = { drinks: 'drinks.csv', paper: 'paper.csv' };
+let currentTab = 'drinks';
+let products = [];
+let tasks = [];
+let outOfStockItems = JSON.parse(localStorage.getItem('outOfStockItems') || '[]');
+let outOfStockCounts = JSON.parse(localStorage.getItem('outOfStockCounts') || '{}');
+let outOfStockRestoreStatus = JSON.parse(localStorage.getItem('outOfStockRestoreStatus') || '{}');
+window.searchKeyword = '';
+
+// --- CSV Utility ---
+function parseCSV(text) {
+  const lines = text.trim().split(/\r?\n/);
+  const headers = lines[0].split(',');
+  return lines.slice(1).map(line => {
+    const cols = line.split(',');
+    const obj = {};
+    headers.forEach((h, i) => obj[h] = cols[i] || '');
+    obj.boxCount = Number(obj.boxCount) || 0;
+    obj.tasks = obj.tasks ? JSON.parse(obj.tasks) : [];
+    obj.order = Number(obj.order) || 0;
+    return obj;
+  });
 }
 
-body.dark-mode {
-  --main-bg: #23272a;
-  --header-bg: #1a1b21;
-  --tab-active: #5865f2;
-  --tab-inactive: #2c2f36;
-  --card-bg: #2c2f36;
-  --carried-bg: #2e3a59;
-  --not-carried-bg: #3a2e59;
-  --out-stock-bg: #23272a;
-  --border-radius: 1.2rem;
-  --transition: 0.2s;
-  --text-primary: #f3f4f6;
-  --text-secondary: #b9bbbe;
-  --product-box-bg: #5865f2;
-  --product-box-color: #fff;
+// --- Data Load ---
+async function loadProducts(tab) {
+  const res = await fetch(TAB_FILES[tab]);
+  const text = await res.text();
+  products = parseCSV(text).sort((a, b) => a.order - b.order);
+  renderProducts();
+  renderTasks();
 }
 
-/* --- ヘッダー操作部（タブ・サブタブ） --- */
-.header-controls {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-.main-tabs, .sub-tabs {
-  display: flex;
-  gap: 12px;
-}
-.tab, .subtab {
-  padding: 10px 22px;
-  font-size: 1rem;
-  border: 1.5px solid #3B82F6;
-  background-color: #23272A;
-  color: #3B82F6;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background 0.2s, color 0.2s, border 0.2s;
-}
-.tab.active, .subtab.active {
-  background-color: #3B82F6;
-  color: #fff;
-  border-color: #3B82F6;
-  box-shadow: 0 2px 12px rgba(59,130,246,0.18);
+// --- Product List ---
+let taskCounts = {};
+function updateTaskCounts() {
+  taskCounts = {};
+  tasks.forEach(t => {
+    if (!taskCounts[t.id]) taskCounts[t.id] = 0;
+    taskCounts[t.id]++;
+  });
 }
 
-/* --- 検索ボックス --- */
-#search-box {
-  width: 100%;
-  max-width: 420px;
-  padding: 12px 16px;
-  font-size: 1.08rem;
-  border: 1.5px solid #3B82F6;
-  background-color: #23272A;
-  color: #F3F4F6;
-  border-radius: 8px;
-  box-sizing: border-box;
-  margin-top: 8px;
-  margin-bottom: 8px;
-  outline: none;
-  transition: border 0.2s;
-}
-#search-box:focus {
-  border-color: #60A5FA;
-}
-/* --- ベースカラー・フォント --- */
-body {
-  background: #181A1B;
-  color: #F3F4F6;
-  font-family: 'Segoe UI', 'Noto Sans JP', Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  letter-spacing: 0.01em;
-}
-
-main {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 32px 16px 80px 16px;
-}
-
-/* --- ヘッダー・タブ --- */
-.header {
-  background: #23272A;
-  color: #F3F4F6;
-  padding: 24px 0 12px 0;
-  text-align: center;
-  font-size: 2.1rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
-}
-.tab-bar {
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-  margin: 18px 0 8px 0;
-}
-.tab {
-  background: #23272A;
-  color: #F3F4F6;
-  border: none;
-  border-radius: 18px;
-  padding: 8px 28px;
-  font-size: 1.1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.08);
-}
-.tab.active {
-  background: #3B82F6;
-  color: #fff;
-}
-
-/* --- 検索・設定 --- */
-.search-area {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 18px;
-}
-#search-box {
-  background: #23272A;
-  color: #F3F4F6;
-  border: 1.5px solid #3B82F6;
-  border-radius: 12px;
-  padding: 8px 16px;
-  font-size: 1rem;
-  width: 220px;
-  outline: none;
-  transition: border 0.2s;
-}
-#search-box:focus {
-  border-color: #60A5FA;
-}
-.settings-btn {
-  background: #23272A;
-  color: #3B82F6;
-  border: none;
-  border-radius: 50%;
-  font-size: 1.5rem;
-  margin-left: 12px;
-  cursor: pointer;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.08);
-  transition: background 0.2s, color 0.2s;
-}
-.settings-btn:hover {
-  background: #3B82F6;
-  color: #fff;
-}
-
-/* --- 商品一覧 --- */
-.location-heading {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #60A5FA;
-  margin: 32px 0 10px 0;
-  letter-spacing: 0.03em;
-}
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 24px;
-  margin-bottom: 24px;
-}
-.product-card {
-  background: #23272A;
-  border-radius: 18px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.13);
-  padding: 18px 12px 16px 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: box-shadow 0.2s, transform 0.2s;
-  cursor: pointer;
-  position: relative;
-  min-height: 180px;
-}
-.product-card:hover {
-  box-shadow: 0 4px 24px rgba(59,130,246,0.18);
-  transform: translateY(-2px) scale(1.03);
-}
-.product-card.out-of-stock {
-  opacity: 0.45;
-  pointer-events: none;
-}
-.product-card img {
-  width: 72px;
-  height: 72px;
-  object-fit: contain;
-  border-radius: 12px;
-  margin-bottom: 10px;
-  background: #181A1B;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.10);
-}
-.product-name {
-  font-size: 1.08rem;
-  font-weight: 500;
-  color: #F3F4F6;
-  margin-bottom: 8px;
-  text-align: center;
-  letter-spacing: 0.02em;
-}
-.product-box {
-  font-size: 1.02rem;
-  color: #2563EB;
-  font-weight: 600;
-  background: #E3ECF9;
-  border-radius: 8px;
-  padding: 4px 12px;
-  margin-top: 2px;
-  box-shadow: 0 1px 4px rgba(59,130,246,0.08);
-  letter-spacing: 0.03em;
-}
-.touch-highlight {
-  animation: highlight 0.4s;
-}
-@keyframes highlight {
-  0% { box-shadow: 0 0 0 0 #3B82F6; }
-  50% { box-shadow: 0 0 0 8px #3B82F6; }
-  100% { box-shadow: 0 2px 12px rgba(0,0,0,0.13); }
-}
-
-/* --- タスク一覧 --- */
-.task-category-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #F59E42;
-  margin: 28px 0 8px 0;
-}
-.task-category {
-  margin-bottom: 18px;
-}
-.task-item {
-  background: #23272A;
-  border-radius: 14px;
-  box-shadow: 0 1px 8px rgba(0,0,0,0.10);
-  padding: 14px 10px;
-  display: grid;
-  grid-template-columns: 90px 1fr auto;
-  align-items: center;
-  margin-bottom: 12px;
-  transition: box-shadow 0.2s;
-}
-.task-item.carried {
-  opacity: 0.6;
-}
-.task-item.not-carried {
-  border: 2px solid #EF4444;
-}
-.task-img {
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
-  border-radius: 10px;
-  margin-right: 0;
-  background: #181A1B;
-}
-.task-name {
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: #F3F4F6;
-  margin-right: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  word-break: break-all;
-  line-height: 1.3;
-  max-width: 100%;
-  line-clamp: 3;
-}
-.task-buttons {
-  margin-left: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: flex-end;
-}
-.carried-btn, .not-carried-btn, .delete-btn, .restore-btn {
-  background: #3B82F6;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 6px 14px;
-  font-size: 0.98rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s;
-  box-shadow: 0 1px 4px rgba(59,130,246,0.08);
-}
-.carried-btn:hover, .not-carried-btn:hover, .delete-btn:hover, .restore-btn:hover {
-  background: #2563EB;
-}
-.mark-out-of-stock {
-  background: #EF4444 !important;
-  color: #fff !important;
-}
-.out-stock-list {
-  background: #23272A;
-  border-radius: 12px;
-  box-shadow: 0 1px 8px rgba(0,0,0,0.10);
-  padding: 12px 16px;
-  margin-top: 24px;
-}
-.out-stock-title {
-  font-size: 1.08rem;
-  font-weight: 600;
-  color: #EF4444;
-  margin-bottom: 10px;
-}
-.out-stock-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 8px;
-}
-.restore-btn {
-  background: #F59E42;
-  color: #23272A;
-}
-.restore-btn:hover {
-  background: #F3F4F6;
-  color: #F59E42;
-}
-
-/* --- モーダル --- */
-#settings-modal {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(24,26,27,0.85);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-}
-.settings-modal-content {
-  background: #23272A;
-  color: #F3F4F6;
-  border-radius: 18px;
-  box-shadow: 0 4px 32px rgba(0,0,0,0.18);
-  padding: 32px 28px;
-  min-width: 320px;
-  max-width: 90vw;
-  text-align: center;
-}
-#close-settings {
-  background: #EF4444;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 6px 18px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  margin-top: 18px;
-  transition: background 0.2s;
-}
-#close-settings:hover {
-  background: #B91C1C;
-}
-#reset-btn {
-  background: #3B82F6;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 6px 18px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  margin-top: 18px;
-  transition: background 0.2s;
-}
-#reset-btn:hover {
-  background: #2563EB;
-}
-
-/* --- ページトップ・ロゴ --- */
-#scrollTopBtn {
-  position: fixed;
-  right: 32px;
-  bottom: 32px;
-  background: #3B82F6;
-  color: #fff;
-  border: none;
-  border-radius: 50%;
-  width: 54px;
-  height: 54px;
-  font-size: 2rem;
-  box-shadow: 0 2px 12px rgba(59,130,246,0.18);
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.3s, bottom 0.3s;
-  z-index: 1200;
-}
-#scrollTopBtn.show {
-  opacity: 1;
-}
-#scrollTopBtn.hide {
-  opacity: 0;
-}
-.kutsuzawa-logo {
-  position: fixed;
-  left: 50%;
-  bottom: -120px;
-  transform: translateX(-50%);
-  z-index: 1000;
-  opacity: 0;
-  transition: bottom 0.5s, opacity 0.5s;
-  pointer-events: none;
-}
-.kutsuzawa-logo.show {
-  bottom: 24px;
-  opacity: 1;
-}
-.kutsuzawa-logo img {
-  width: 120px;
-  height: auto;
-  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2));
-}
-
-/* --- レスポンシブ --- */
-@media (max-width: 600px) {
-  main {
-    padding: 16px 4px 80px 4px;
+function renderProducts() {
+  updateTaskCounts();
+  const list = document.getElementById('product-list');
+  list.innerHTML = '';
+  // locationごとにグループ化
+  const grouped = {};
+  const locationOrder = [];
+  let customPaperOrder = ["キッチン用品", "レジ前", "トイレ用品"];
+  let isPaperTab = currentTab === 'paper';
+  products.forEach(prod => {
+    if (!grouped[prod.location]) {
+      grouped[prod.location] = [];
+      locationOrder.push(prod.location);
+    }
+    grouped[prod.location].push(prod);
+  });
+  let orderList = locationOrder;
+  if (isPaperTab) {
+    orderList = customPaperOrder.filter(loc => locationOrder.includes(loc)).concat(locationOrder.filter(loc => !customPaperOrder.includes(loc)));
   }
-  .product-grid {
-    gap: 14px;
-  }
-  .product-card {
-    min-height: 140px;
-    padding: 12px 6px 10px 6px;
-  }
-  .header {
-    font-size: 1.3rem;
-    padding: 16px 0 8px 0;
-  }
-  .tab {
-    font-size: 0.98rem;
-    padding: 6px 12px;
-  }
-  #scrollTopBtn {
-    right: 12px;
-    bottom: 12px;
-    width: 44px;
-    height: 44px;
-    font-size: 1.3rem;
-  }
-  .kutsuzawa-logo img {
-    width: 80px;
+  orderList.forEach(location => {
+    const heading = document.createElement('h2');
+    heading.className = 'location-heading';
+    heading.textContent = location;
+    list.appendChild(heading);
+    const gridDiv = document.createElement('div');
+    gridDiv.className = 'product-grid';
+    grouped[location].forEach(prod => {
+      if (window.searchKeyword && !prod.name.toLowerCase().includes(window.searchKeyword)) return;
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      card.setAttribute('data-id', prod.id);
+      if (outOfStockItems.includes(prod.id)) {
+        card.classList.add('out-of-stock');
+      }
+      // 数量表示エリア
+      let count = taskCounts[prod.id] || 0;
+      let boxHtml = '';
+      if (currentTab === 'drinks') {
+        boxHtml = `<div class="product-box">追加数: ${count}</div>`;
+      } else {
+        // paper.csvのCount列
+        let possible = Number(prod.Count) || 0;
+        boxHtml = `<div class="product-box">${count}/${possible}</div>`;
+      }
+      card.innerHTML = `
+        <img src="${prod.imageUrl}" alt="${prod.name}">
+        <div class="product-name">${prod.name}</div>
+        ${boxHtml}
+      `;
+      // 長押しGoogle検索機能
+      let longPressTimer = null;
+      let isLongPress = false;
+  const LONG_PRESS_DURATION = 2000;
+      const imgElem = card.querySelector('img');
+      imgElem.addEventListener('mousedown', (e) => {
+        if (outOfStockItems.includes(prod.id)) return;
+        isLongPress = false;
+        longPressTimer = setTimeout(() => {
+          isLongPress = true;
+          const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(prod.name);
+          window.open(searchUrl, '_blank');
+        }, LONG_PRESS_DURATION);
+      });
+      imgElem.addEventListener('mouseup', () => {
+        clearTimeout(longPressTimer);
+      });
+      imgElem.addEventListener('mouseleave', () => {
+        clearTimeout(longPressTimer);
+      });
+      imgElem.addEventListener('touchstart', (e) => {
+        if (outOfStockItems.includes(prod.id)) return;
+        isLongPress = false;
+        longPressTimer = setTimeout(() => {
+          isLongPress = true;
+          const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(prod.name);
+          window.open(searchUrl, '_blank');
+        }, LONG_PRESS_DURATION);
+      });
+      imgElem.addEventListener('touchend', () => {
+        clearTimeout(longPressTimer);
+      });
+      // 通常タップ（短押し）
+      card.onclick = () => {
+        if (outOfStockItems.includes(prod.id)) return;
+        if (isLongPress) {
+          isLongPress = false;
+          return;
+        }
+        addTask(prod);
+        card.classList.add('touch-highlight');
+        setTimeout(() => card.classList.remove('touch-highlight'), 350);
+      };
+      gridDiv.appendChild(card);
+    });
+    list.appendChild(gridDiv);
+  });
+}
+
+// タスク追加
+function addTask(product) {
+  tasks.push({ ...product, status: 'new', taskUid: Date.now() + Math.random() });
+  if (!taskCounts[product.id]) taskCounts[product.id] = 0;
+  taskCounts[product.id]++;
+  saveTasks();
+  renderTasks();
+  renderProducts(); // 追加数即時反映
+}
+
+// タスク削除
+function deleteTask(taskUid) {
+  const idx = tasks.findIndex(t => t.taskUid === taskUid);
+  if (idx !== -1) {
+    const id = tasks[idx].id;
+    tasks.splice(idx, 1);
+    if (taskCounts[id]) {
+      taskCounts[id]--;
+      if (taskCounts[id] <= 0) delete taskCounts[id];
+    }
+    saveTasks();
+    renderTasks();
+    renderProducts(); // 追加数即時反映
   }
 }
-.settings-modal-logo {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 1.2rem;
-}
-.settings-modal-logo img {
-  width: 120px;
-  height: auto;
-  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2));
-}
-.task-item .task-img {
-  width: 90px;
-  height: 90px;
-  object-fit: cover;
-  border-radius: 1rem;
-  margin-right: 1rem;
-  background: #e0e7ff;
-}
-.task-item-content {
-  display: flex;
-  align-items: center;
-}
-.task-item .task-name {
-  max-width: none;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: normal;
-  line-clamp: 3;
-}
-.location-group {
-  margin-bottom: 1.5rem;
-  width: 100%;
-}
-.product-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 0.5rem;
-}
-.out-stock-list {
-  margin-top: 2rem;
-  background: #f3f4f6;
-  border-radius: 1.2rem;
-  padding: 1rem 0.7rem;
-  box-shadow: 0 2px 8px rgba(31,38,135,0.07);
-}
-.out-stock-title {
-  font-size: 1rem;
-  font-weight: 700;
-  color: #ef4444;
-  margin-bottom: 0.7rem;
-}
-.out-stock-item {
-  font-size: 1rem;
-  color: #6366f1;
-  margin-bottom: 0.5rem;
-}
-.settings-btn {
-  position: static;
-  top: 0.7rem;
-  right: 1.1rem;
-  background: none;
-  border: none;
-  font-size: 1.7rem;
-  cursor: pointer;
-  color: #fff;
-  z-index: 10;
-}
-.settings-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0,0,0,0.25);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-}
-/* 設定モーダル ダークモード対応 */
-.settings-modal-content {
-  background: var(--card-bg);
-  color: var(--text-primary);
-  border-radius: var(--border-radius);
-  padding: 2rem 1.5rem 1.5rem 1.5rem;
-  min-width: 260px;
-  box-shadow: 0 2px 16px rgba(31,38,135,0.13);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: background 0.3s, color 0.3s;
-}
-.settings-modal-title {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--text-secondary);
-  margin-bottom: 1.2rem;
-}
-.reset-btn {
-  background: #ef4444;
-  color: #fff;
-  border: none;
-  border-radius: 9999px;
-  font-size: 1rem;
-  font-weight: 700;
-  padding: 0.7rem 2.2rem;
-  margin-bottom: 1.2rem;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.reset-btn:hover {
-  background: #dc2626;
-}
-.close-settings {
-  background: var(--tab-inactive);
-  color: var(--text-secondary);
-  border: none;
-  border-radius: 9999px;
-  font-size: 1rem;
-  font-weight: 600;
-  padding: 0.5rem 1.5rem;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-}
-.close-settings:hover {
-  background: var(--tab-active);
-  color: #fff;
-}
-.product-card.touch-highlight {
-  box-shadow: 0 0 0 4px #6366f1;
-  border: 2px solid #6366f1;
-  transition: box-shadow 0.2s, border 0.2s;
-}
-.location-group {
-  margin-bottom: 1.5rem;
-}
-.location-title {
-  font-size: 1rem;
-  font-weight: 700;
-  color: #2563eb;
-  margin-bottom: 0.5rem;
-  margin-left: 0.2rem;
-}
-/* サブタブ切替 */
-.sub-tabs {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  margin-top: 0.7rem;
-  margin-bottom: 0.7rem;
-}
-.subtab {
-  background: var(--tab-inactive);
-  color: var(--text-secondary);
-  border: none;
-  border-radius: 9999px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  padding: 0.7rem 1.6rem;
-  margin: 0.2rem 0;
-  cursor: pointer;
-  transition: background var(--transition), color var(--transition);
-}
-.subtab.active {
-  background: var(--tab-active);
-  color: #fff;
-}
-/* style.css - スーパー品出しSPA用 */
-:root {
-  --main-bg: #f3f4f6;
-  --header-bg: #2563eb;
-  --tab-active: #6366f1;
-  --tab-inactive: #e0e7ff;
-  --card-bg: #fff;
-  --carried-bg: #d1fae5;
-  --not-carried-bg: #fee2e2;
-  --out-stock-bg: #f3f4f6;
-  --border-radius: 1.2rem;
-  --transition: 0.2s;
-}
-body {
-  margin: 0;
-  font-family: 'Inter', 'Noto Sans JP', sans-serif;
-  background: var(--main-bg);
-  color: var(--text-primary);
-  min-height: 100vh;
-  transition: background 0.3s, color 0.3s;
-}
-.header {
-  background: var(--header-bg);
-  color: var(--text-primary);
-  padding: 0.7rem 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-bottom-left-radius: var(--border-radius);
-  border-bottom-right-radius: var(--border-radius);
-  transition: background 0.3s, color 0.3s;
-}
-.tabs {
-  display: flex;
-  gap: 1rem;
-}
-.tab {
-  background: var(--tab-inactive);
-  color: var(--text-secondary);
-  border: none;
-  border-radius: 9999px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  padding: 0.7rem 1.6rem;
-  margin: 0.2rem 0;
-  cursor: pointer;
-  transition: background var(--transition), color var(--transition);
-}
-.tab.active {
-  background: var(--tab-active);
-  color: #fff;
-}
-.main {
-  max-width: 480px;
-  margin: 0 auto;
-  padding: 0.7rem 0.5rem 2.5rem 0.5rem;
-}
-#product-list {
-  display: block;
-}
-.location-heading {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #2563eb;
-  background: #e0e7ff;
-  border-radius: 0.7rem;
-  padding: 0.5rem 1rem;
-  margin: 1.2rem 0 0.5rem 0;
-}
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-  margin-bottom: 0.5rem;
-}
-@media (min-width: 600px) {
-  .product-grid {
-    grid-template-columns: repeat(3, 1fr);
+
+// --- Task List ---
+function renderTasks() {
+  const area = document.getElementById('task-list');
+  area.innerHTML = '';
+  // グループ化
+  const grouped = {};
+  tasks.forEach(t => {
+    // 検索フィルタ
+    if (window.searchKeyword && !t.name.toLowerCase().includes(window.searchKeyword)) return;
+    // 運搬済はカテゴリ表示から除外
+    if (t.status === 'carried') return;
+    const cat = t.category;
+    if (!grouped[cat]) grouped[cat] = [];
+    grouped[cat].push(t);
+  });
+  // タブごとに表示
+  const showCats = currentTab === 'drinks'
+    ? ['お茶', '水', 'ジュース', '炭酸', '大型飲料', 'コーヒー', 'その他']
+    : ['キッチン', 'ティッシュ', 'トイレットペーパー'];
+  showCats.forEach(cat => {
+    if (!grouped[cat]) return;
+    const catDiv = document.createElement('div');
+    catDiv.className = 'task-category';
+    catDiv.innerHTML = `<div class="task-category-title">${cat}</div>`;
+    grouped[cat].forEach((task, idx) => {
+      const item = document.createElement('div');
+      item.className = 'task-item';
+      if (task.status === 'carried') item.classList.add('carried');
+      if (task.status === 'not-carried') item.classList.add('not-carried');
+      item.innerHTML = `
+        <div class="task-item-content">
+          <img class="task-img" src="${task.imageUrl}" alt="img">
+          <div class="task-name">${task.name}</div>
+        </div>
+        <div class="task-buttons">
+          <button class="carried-btn">運搬済</button>
+          <button class="not-carried-btn">${task.status === 'not-carried' ? '在庫無' : '未運搬'}</button>
+          <button class="delete-btn">削除</button>
+        </div>
+      `;
+      item.querySelector('.carried-btn').onclick = () => {
+        task.status = 'carried';
+        grouped[cat].push(grouped[cat].splice(idx,1)[0]);
+        saveTasks();
+        renderTasks();
+      };
+      // 未運搬→在庫無
+      const notBtn = item.querySelector('.not-carried-btn');
+      if (task.status === 'not-carried') {
+        notBtn.classList.add('mark-out-of-stock');
+      }
+      notBtn.onclick = () => {
+        if (notBtn.classList.contains('mark-out-of-stock')) {
+          // 在庫無ボタン
+          if (!outOfStockItems.includes(task.id)) {
+            outOfStockItems.push(task.id);
+            // 個数記録
+            const sameTasks = tasks.filter(t => t.id === task.id);
+            outOfStockCounts[task.id] = sameTasks.length;
+            // 運搬済/未運搬状態も記録
+            outOfStockRestoreStatus[task.id] = sameTasks.map(t => t.status);
+            localStorage.setItem('outOfStockItems', JSON.stringify(outOfStockItems));
+            localStorage.setItem('outOfStockCounts', JSON.stringify(outOfStockCounts));
+            localStorage.setItem('outOfStockRestoreStatus', JSON.stringify(outOfStockRestoreStatus));
+          }
+          renderProducts();
+          // 同IDタスク一括削除
+          tasks = tasks.filter(t => t.id !== task.id);
+          saveTasks();
+          renderTasks();
+        } else {
+          task.status = 'not-carried';
+          notBtn.textContent = '在庫無';
+          notBtn.classList.add('mark-out-of-stock');
+          grouped[cat].push(grouped[cat].splice(idx,1)[0]);
+          saveTasks();
+          renderTasks();
+        }
+      };
+      item.querySelector('.delete-btn').onclick = () => {
+        tasks = tasks.filter(t => t.taskUid !== task.taskUid);
+        saveTasks();
+        renderTasks();
+      };
+      catDiv.appendChild(item);
+    });
+    area.appendChild(catDiv);
+  });
+  // 在庫無商品一覧（重複なし）
+  const uniqueOutStock = Array.from(new Set(outOfStockItems));
+  if (uniqueOutStock.length > 0) {
+    const outDiv = document.createElement('div');
+    outDiv.className = 'out-stock-list';
+    outDiv.innerHTML = '<div class="out-stock-title">在庫無商品</div>';
+    uniqueOutStock.forEach(id => {
+      const prod = products.find(p => p.id === id);
+      if (prod) {
+        const item = document.createElement('div');
+        item.className = 'out-stock-item';
+        item.innerHTML = `
+          <img class="task-img" src="${prod.imageUrl}" alt="img">
+          <span class="task-name">${prod.name}</span>
+        `;
+        // タスクに戻すボタン
+        const restoreBtn = document.createElement('button');
+        restoreBtn.className = 'restore-btn';
+        restoreBtn.textContent = 'タスクに戻す';
+        restoreBtn.onclick = () => {
+          // 在庫無解除
+          outOfStockItems = outOfStockItems.filter(x => x !== id);
+          localStorage.setItem('outOfStockItems', JSON.stringify(outOfStockItems));
+          // 個数取得
+          const restoreCount = outOfStockCounts[id] || 1;
+          // 運搬済/未運搬状態取得
+          const restoreStatusArr = outOfStockRestoreStatus[id] || [];
+          delete outOfStockCounts[id];
+          delete outOfStockRestoreStatus[id];
+          localStorage.setItem('outOfStockCounts', JSON.stringify(outOfStockCounts));
+          localStorage.setItem('outOfStockRestoreStatus', JSON.stringify(outOfStockRestoreStatus));
+          renderProducts();
+          // タスク復元
+          for (let i = 0; i < restoreCount; i++) {
+            const prodObj = products.find(p => p.id === id);
+            if (prodObj) {
+              const status = restoreStatusArr[i] || 'new';
+              tasks.push({ ...prodObj, status, taskUid: Date.now() + Math.random() });
+            }
+          }
+          saveTasks();
+          renderTasks();
+        };
+        item.appendChild(restoreBtn);
+        outDiv.appendChild(item);
+      }
+    });
+    area.appendChild(outDiv);
+  }
+
+  // 運搬済タスク一覧（重複なし）
+  const carriedTasks = tasks.filter(t => t.status === 'carried');
+  if (carriedTasks.length > 0) {
+    const carriedDiv = document.createElement('div');
+    carriedDiv.className = 'out-stock-list';
+    carriedDiv.innerHTML = '<div class="out-stock-title">運搬済商品</div>';
+    // category順でグループ化
+    const grouped = {};
+    carriedTasks.forEach(t => {
+      if (!grouped[t.category]) grouped[t.category] = [];
+      grouped[t.category].push(t);
+    });
+    const showCats = currentTab === 'drinks'
+      ? ['お茶', '水', 'ジュース', '炭酸', '大型飲料', 'コーヒー', 'その他']
+      : ['キッチン', 'ティッシュ', 'トイレットペーパー'];
+    showCats.forEach(cat => {
+      if (!grouped[cat]) return;
+      grouped[cat].forEach(task => {
+        const item = document.createElement('div');
+        item.className = 'out-stock-item carried';
+        item.innerHTML = `
+          <img class="task-img" src="${task.imageUrl}" alt="img">
+          <span class="task-name">${task.name}</span>
+        `;
+        // 削除ボタン
+        const delBtn = document.createElement('button');
+        delBtn.className = 'delete-btn';
+        delBtn.textContent = '削除';
+        delBtn.onclick = () => {
+          tasks = tasks.filter(t2 => t2.taskUid !== task.taskUid);
+          saveTasks();
+          renderTasks();
+        };
+        // 未運搬ボタン
+        const notBtn = document.createElement('button');
+        notBtn.className = 'not-carried-btn';
+        notBtn.textContent = '未運搬';
+        notBtn.onclick = () => {
+          task.status = 'new';
+          saveTasks();
+          renderTasks();
+        };
+        const btns = document.createElement('div');
+        btns.className = 'carried-task-buttons';
+        btns.appendChild(delBtn);
+        btns.appendChild(notBtn);
+        item.appendChild(btns);
+        carriedDiv.appendChild(item);
+      });
+    });
+    area.appendChild(carriedDiv);
   }
 }
-.product-card {
-  background: var(--card-bg);
-  border-radius: var(--border-radius);
-  box-shadow: 0 2px 8px rgba(31,38,135,0.07);
-  padding: 0.7rem 0.5rem 1rem 0.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: pointer;
-  transition: box-shadow var(--transition), filter var(--transition), background 0.3s;
-  position: relative;
+
+// --- タスク保存・リセット ---
+function saveTasks() {
+  localStorage.setItem('tasks', JSON.stringify(tasks));
 }
-.product-card.out-of-stock {
-  filter: grayscale(100%);
-  opacity: 0.6;
-  pointer-events: none;
+function loadTasks() {
+  const t = localStorage.getItem('tasks');
+  tasks = t ? JSON.parse(t) : [];
 }
-.product-card img {
-  width: 90px;
-  height: 90px;
-  object-fit: cover;
-  border-radius: 0.8rem;
-  background: #e0e7ff;
-  margin-bottom: 0.5rem;
+
+// --- タブ切り替え ---
+function setTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(`tab-${tab}`).classList.add('active');
+  loadProducts(tab);
 }
-.product-card .product-name {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #222;
-  text-align: center;
-  margin-bottom: 0.2rem;
-}
-.product-card .product-location {
-  font-size: 0.85rem;
-  color: #6366f1;
-  margin-bottom: 0.2rem;
-}
-.product-card .product-box {
-  font-size: 0.95rem;
-  color: var(--product-box-color);
-  background: var(--product-box-bg);
-  border-radius: 0.7rem;
-  padding: 0.3rem 1rem;
-  margin-bottom: 0.2rem;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  transition: background 0.3s, color 0.3s;
-}
-.task-list {
-  margin-top: 1.2rem;
-}
-.task-category {
-  margin-bottom: 1.2rem;
-}
-.task-category-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #2563eb;
-  margin-bottom: 0.5rem;
-}
-.task-item {
-  background: var(--card-bg);
-  border-radius: var(--border-radius);
-  box-shadow: 0 2px 8px rgba(31,38,135,0.07);
-  padding: 0.7rem 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.7rem;
-  transition: background var(--transition), opacity var(--transition);
-}
-.task-item.carried {
-  background: var(--carried-bg);
-  opacity: 0.7;
-}
-.task-item.not-carried {
-  background: var(--not-carried-bg);
-}
-.task-item .task-name {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #222;
-}
-.task-item .task-buttons {
-  display: flex;
-  gap: 0.5rem;
-}
-.task-item button {
-  border: none;
-  border-radius: 9999px;
-  font-size: 1.05rem;
-  font-weight: 700;
-  padding: 0.7rem 1.2rem;
-  cursor: pointer;
-  transition: background var(--transition), color var(--transition);
-  min-width: 80px;
-  box-sizing: border-box;
-}
-.task-item .carried-btn {
-  background: #22c55e;
-  color: #fff;
-}
-.task-item .not-carried-btn {
-  background: #f59e0b;
-  color: #fff;
-}
-.task-item .delete-btn {
-  background: #ef4444;
-  color: #fff;
-}
-.task-item .mark-out-of-stock {
-  background: #6366f1;
-  color: #fff;
-}
-.search-area {
-  display: flex;
-  justify-content: center;
-  margin: 0.5rem 0 1rem 0;
-}
-#search-box {
-  width: 80%;
-  max-width: 320px;
-  font-size: 1rem;
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
-  border: 1px solid #e0e7ff;
-  background: #f3f4f6;
-  color: #222;
-}
-.out-stock-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.out-stock-item .restore-btn {
-  background: #2563eb;
-  color: #fff;
-  border: none;
-  border-radius: 9999px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  padding: 0.3rem 1.1rem;
-  margin-left: 1rem;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.out-stock-item .restore-btn:hover {
-  background: #6366f1;
-}
-/* ページトップへ戻るボタン */
-.scroll-top-btn {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  z-index: 1000;
-  background: #6366f1;
-  color: #fff;
-  border: none;
-  border-radius: 9999px;
-  font-size: 2rem;
-  width: 48px;
-  height: 48px;
-  box-shadow: 0 2px 8px rgba(31,38,135,0.13);
-  cursor: pointer;
-  display: none;
-  transition: opacity 0.2s;
-}
-.scroll-top-btn.show {
-  display: block;
-  opacity: 1;
-}
-.scroll-top-btn.hide {
-  display: none;
-  opacity: 0;
-}
+
+// --- 初期化 ---
+document.addEventListener('DOMContentLoaded', () => {
+  // タスクリセット(火木土)ボタン
+  document.getElementById('task-reset-btn').onclick = () => {
+    // 在庫無商品以外のタスクのみ削除
+    tasks = tasks.filter(t => outOfStockItems.includes(t.id));
+    saveTasks();
+    renderTasks();
+    document.getElementById('settings-modal').style.display = 'none';
+  };
+  // ダーク/ライトモード初期化
+  const themeToggle = document.getElementById('theme-toggle');
+  const body = document.body;
+  // localStorageから取得
+  const savedTheme = localStorage.getItem('themeMode');
+  if (savedTheme === 'dark') {
+    body.classList.add('dark-mode');
+    themeToggle.checked = true;
+  } else {
+    body.classList.remove('dark-mode');
+    themeToggle.checked = false;
+  }
+  // トグル操作
+  if (themeToggle) {
+    themeToggle.addEventListener('change', (e) => {
+      if (themeToggle.checked) {
+        body.classList.add('dark-mode');
+        localStorage.setItem('themeMode', 'dark');
+      } else {
+        body.classList.remove('dark-mode');
+        localStorage.setItem('themeMode', 'light');
+      }
+    });
+  }
+  // タスクタブ表示制御
+  document.getElementById('subtab-tasks').onclick = () => {
+    document.getElementById('product-list').style.display = 'none';
+    document.querySelector('.task-tabs').style.display = '';
+    document.getElementById('task-list').style.display = '';
+    document.getElementById('subtab-products').classList.remove('active');
+    document.getElementById('subtab-tasks').classList.add('active');
+  };
+  document.getElementById('subtab-products').onclick = () => {
+    document.getElementById('product-list').style.display = '';
+    document.querySelector('.task-tabs').style.display = 'none';
+    document.getElementById('task-list').style.display = 'none';
+    document.getElementById('subtab-products').classList.add('active');
+    document.getElementById('subtab-tasks').classList.remove('active');
+  };
+  // 設定ボタン
+  document.getElementById('settings-btn').onclick = () => {
+    document.getElementById('settings-modal').style.display = 'flex';
+  };
+  document.getElementById('close-settings').onclick = () => {
+    document.getElementById('settings-modal').style.display = 'none';
+  };
+  document.getElementById('reset-btn').onclick = () => {
+  localStorage.removeItem('tasks');
+  localStorage.removeItem('outOfStockItems');
+    tasks = [];
+    outOfStockItems = [];
+    renderProducts();
+    renderTasks();
+    document.getElementById('settings-modal').style.display = 'none';
+  };
+  // タブ
+  document.getElementById('tab-drinks').onclick = () => setTab('drinks');
+  document.getElementById('tab-paper').onclick = () => setTab('paper');
+  // サブタブ
+  document.getElementById('subtab-products').onclick = () => {
+    document.getElementById('product-list').style.display = '';
+    document.getElementById('task-list').style.display = 'none';
+    document.getElementById('subtab-products').classList.add('active');
+    document.getElementById('subtab-tasks').classList.remove('active');
+  };
+  document.getElementById('subtab-tasks').onclick = () => {
+    document.getElementById('product-list').style.display = 'none';
+    document.getElementById('task-list').style.display = '';
+    document.getElementById('subtab-products').classList.remove('active');
+    document.getElementById('subtab-tasks').classList.add('active');
+  };
+  // 検索ボックス
+  const searchBox = document.getElementById('search-box');
+  if (searchBox) {
+    searchBox.addEventListener('input', e => {
+      window.searchKeyword = e.target.value.trim().toLowerCase();
+      renderProducts();
+      renderTasks();
+    });
+  }
+  // データ
+  loadProducts(currentTab);
+  loadTasks();
+  renderTasks();
+});
+
+// ページトップへ戻るボタン
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('scrollTopBtn');
+  if (btn) {
+    if (window.scrollY > 200) {
+      btn.classList.add('show');
+      btn.classList.remove('hide');
+    } else {
+      btn.classList.remove('show');
+      btn.classList.add('hide');
+    }
+  }
+  // 最下部スクロール判定
+  const logo = document.getElementById('kutsuzawa-logo');
+  if (logo) {
+    const scrollBottom = window.innerHeight + window.scrollY;
+    const docHeight = document.documentElement.scrollHeight;
+    if (docHeight - scrollBottom < 10) {
+      logo.classList.add('show');
+    } else {
+      logo.classList.remove('show');
+    }
+  }
+});
+document.getElementById('scrollTopBtn').onclick = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
