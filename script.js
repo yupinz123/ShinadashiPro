@@ -336,6 +336,30 @@ function setTab(tab) {
 
 // --- 初期化 ---
 document.addEventListener('DOMContentLoaded', () => {
+  // ダーク/ライトモード初期化
+  const themeToggle = document.getElementById('theme-toggle');
+  const body = document.body;
+  // localStorageから取得
+  const savedTheme = localStorage.getItem('themeMode');
+  if (savedTheme === 'dark') {
+    body.classList.add('dark-mode');
+    themeToggle.checked = true;
+  } else {
+    body.classList.remove('dark-mode');
+    themeToggle.checked = false;
+  }
+  // トグル操作
+  if (themeToggle) {
+    themeToggle.addEventListener('change', (e) => {
+      if (themeToggle.checked) {
+        body.classList.add('dark-mode');
+        localStorage.setItem('themeMode', 'dark');
+      } else {
+        body.classList.remove('dark-mode');
+        localStorage.setItem('themeMode', 'light');
+      }
+    });
+  }
   // タスクタブ表示制御
   document.getElementById('subtab-tasks').onclick = () => {
     document.getElementById('product-list').style.display = 'none';
