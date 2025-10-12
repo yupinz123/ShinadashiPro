@@ -1,3 +1,28 @@
+.out-stock-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.out-stock-item .task-img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 0.8rem;
+  background: #e0e7ff;
+}
+.out-stock-item .task-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #222;
+  max-width: 12em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  line-clamp: 2;
+}
 .body.dark-mode .task-name, body.dark-mode .task-item .task-name {
   color: #fff !important;
 }
