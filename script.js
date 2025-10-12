@@ -199,7 +199,7 @@ function renderTasks() {
       item.innerHTML = `
         <div class="task-item-content">
           <img class="task-img" src="${task.imageUrl}" alt="img">
-          <div class="task-name">${task.name.slice(0, 5)}${task.name.length > 5 ? '…' : ''}</div>
+          <div class="task-name">${task.name}</div>
         </div>
         <div class="task-buttons">
           <button class="carried-btn">運搬済</button>
