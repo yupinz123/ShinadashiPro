@@ -286,11 +286,6 @@ main {
   font-weight: 500;
   color: #F3F4F6;
   margin-right: 16px;
-  white-space: nowrap;
-  overflow-x: auto;
-  text-overflow: ellipsis;
-  max-width: 70vw;
-  display: block;
 }
 .task-buttons {
   margin-left: auto;
@@ -503,11 +498,10 @@ main {
   align-items: center;
 }
 .task-item .task-name {
-  max-width: 70vw;
-  overflow-x: auto;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  display: block;
+  max-width: none;
+  overflow: visible;
+  white-space: normal;
+  text-overflow: unset;
 }
 .location-group {
   margin-bottom: 1.5rem;
