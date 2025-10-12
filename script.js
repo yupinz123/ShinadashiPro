@@ -97,7 +97,7 @@ function renderProducts() {
       // 長押しGoogle検索機能
       let longPressTimer = null;
       let isLongPress = false;
-      const LONG_PRESS_DURATION = 500;
+  const LONG_PRESS_DURATION = 2000;
       const imgElem = card.querySelector('img');
       imgElem.addEventListener('mousedown', (e) => {
         if (outOfStockItems.includes(prod.id)) return;
