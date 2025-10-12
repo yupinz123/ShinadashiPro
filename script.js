@@ -135,9 +135,7 @@ function renderProducts() {
         }
         addTask(prod);
         card.classList.add('touch-highlight');
-        setTimeout(() => {
-          card.classList.remove('touch-highlight');
-        }, 350);
+        setTimeout(() => card.classList.remove('touch-highlight'), 350);
       };
       gridDiv.appendChild(card);
     });
