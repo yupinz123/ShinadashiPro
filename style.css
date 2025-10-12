@@ -629,11 +629,14 @@ main {
   gap: 1rem;
   justify-content: center;
   margin-top: 0.7rem;
-  margin-bottom: 0.7rem;
-}
-.subtab {
-  background: var(--tab-inactive);
-  color: var(--text-secondary);
+    background: #3B82F6;
+    color: #fff;
+    border: none;
+    border-radius: 9999px;
+    padding: 0.7em 1.2em;
+    min-width: 56px;
+    max-width: 100%;
+    box-sizing: border-box;
   border: none;
   border-radius: 9999px;
   font-size: 1.1rem;
@@ -871,7 +874,9 @@ body {
   padding: 0.3rem 1.1rem;
   margin-left: 1rem;
   cursor: pointer;
-  transition: background 0.2s;
+    min-width: 56px;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 .out-stock-item .restore-btn:hover {
   background: #6366f1;
