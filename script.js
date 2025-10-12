@@ -203,9 +203,9 @@ function renderTasks() {
           <div class="task-name">${task.name}</div>
         </div>
         <div class="task-buttons">
-          <button class="carried-btn">運搬済</button>
-          <button class="not-carried-btn">${task.status === 'not-carried' ? '在庫無' : '未運搬'}</button>
-          <button class="delete-btn">削除</button>
+          <button class="carried-btn">${'運搬済'.split('').join('<br>')}</button>
+          <button class="not-carried-btn">${(task.status === 'not-carried' ? '在庫無' : '未運搬').split('').join('<br>')}</button>
+          <button class="delete-btn">${'削除'.split('').join('<br>')}</button>
         </div>
       `;
       item.querySelector('.carried-btn').onclick = () => {
