@@ -292,18 +292,28 @@ main {
   display: flex;
   gap: 8px;
 }
-.carried-btn, .not-carried-btn, .delete-btn, .restore-btn {
-  background: #3B82F6;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 6px 14px;
-  font-size: 0.98rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s;
-  box-shadow: 0 1px 4px rgba(59,130,246,0.08);
-}
+  /* タスク画面ボタン（運搬済・未運搬・削除・在庫無）を縦並び表示 */
+  .carried-btn, .not-carried-btn, .delete-btn, .restore-btn {
+    background: #3B82F6;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 4px 0;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+    box-shadow: 0 1px 4px rgba(59,130,246,0.08);
+    min-width: 32px;
+    max-width: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.1;
+    word-break: break-all;
+    white-space: pre-line;
+    overflow: visible;
+  }
 .carried-btn:hover, .not-carried-btn:hover, .delete-btn:hover, .restore-btn:hover {
   background: #2563EB;
 }
@@ -370,12 +380,22 @@ main {
   cursor: pointer;
   margin-top: 18px;
   transition: background 0.2s;
-}
-#close-settings:hover {
-  background: #B91C1C;
-}
-#reset-btn {
-  background: #3B82F6;
+  /* 商品名（タスク画面）3行まで表示、超えたら...で省略 */
+  .task-name {
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: #F3F4F6;
+    margin-right: 16px;
+    max-width: 220px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    white-space: normal;
+    word-break: break-all;
+  }
   color: #fff;
   border: none;
   border-radius: 8px;
