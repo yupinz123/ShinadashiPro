@@ -498,10 +498,10 @@ main {
   align-items: center;
 }
 .task-item .task-name {
-  max-width: 4.5em;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  max-width: none;
+  overflow: visible;
+  white-space: normal;
+  text-overflow: unset;
 }
 .location-group {
   margin-bottom: 1.5rem;
@@ -814,6 +814,8 @@ body {
   padding: 0.5rem 1.1rem;
   cursor: pointer;
   transition: background var(--transition), color var(--transition);
+  min-width: 80px;
+  box-sizing: border-box;
 }
 .task-item .carried-btn {
   background: #22c55e;
