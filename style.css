@@ -1,3 +1,6 @@
+.body.dark-mode .task-name, body.dark-mode .task-item .task-name {
+  color: #fff !important;
+}
 .body.dark-mode .product-name, body.dark-mode .product-card .product-name {
   color: #fff !important;
 }
