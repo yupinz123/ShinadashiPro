@@ -5,8 +5,6 @@ let currentTab = 'drinks';
 let products = [];
 let tasks = [];
 let outOfStockItems = JSON.parse(localStorage.getItem('outOfStockItems') || '[]');
-let lastTaskReset = localStorage.getItem('lastTaskReset') || '';
-let lastStockReset = localStorage.getItem('lastStockReset') || '';
 let outOfStockCounts = JSON.parse(localStorage.getItem('outOfStockCounts') || '{}');
 let outOfStockRestoreStatus = JSON.parse(localStorage.getItem('outOfStockRestoreStatus') || '{}');
 window.searchKeyword = '';
@@ -307,32 +305,10 @@ function renderTasks() {
 // --- タスク保存・リセット ---
 function saveTasks() {
   localStorage.setItem('tasks', JSON.stringify(tasks));
-  localStorage.setItem('lastTaskReset', new Date().toISOString());
 }
 function loadTasks() {
   const t = localStorage.getItem('tasks');
   tasks = t ? JSON.parse(t) : [];
-}
-function autoResetTasks() {
-  const now = new Date();
-  const last = lastTaskReset ? new Date(lastTaskReset) : null;
-  if (now.getHours() >= 5 && (!last || last.getDate() !== now.getDate())) {
-    tasks = [];
-    saveTasks();
-    renderTasks();
-    localStorage.setItem('lastTaskReset', now.toISOString());
-  }
-}
-function autoResetStock() {
-  const now = new Date();
-  const last = lastStockReset ? new Date(lastStockReset) : null;
-  const day = now.getDay();
-  if ([2,4,6].includes(day) && (!last || last.getDate() !== now.getDate())) {
-    outOfStockItems = [];
-    localStorage.setItem('outOfStockItems', JSON.stringify([]));
-    localStorage.setItem('lastStockReset', now.toISOString());
-    renderProducts();
-  }
 }
 
 // --- タブ切り替え ---
@@ -345,6 +321,14 @@ function setTab(tab) {
 
 // --- 初期化 ---
 document.addEventListener('DOMContentLoaded', () => {
+  // タスクリセット(火木土)ボタン
+  document.getElementById('task-reset-btn').onclick = () => {
+    // 在庫無商品以外のタスクのみ削除
+    tasks = tasks.filter(t => outOfStockItems.includes(t.id));
+    saveTasks();
+    renderTasks();
+    document.getElementById('settings-modal').style.display = 'none';
+  };
   // ダーク/ライトモード初期化
   const themeToggle = document.getElementById('theme-toggle');
   const body = document.body;
@@ -392,10 +376,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('settings-modal').style.display = 'none';
   };
   document.getElementById('reset-btn').onclick = () => {
-    localStorage.removeItem('tasks');
-    localStorage.removeItem('outOfStockItems');
-    localStorage.removeItem('lastTaskReset');
-    localStorage.removeItem('lastStockReset');
+  localStorage.removeItem('tasks');
+  localStorage.removeItem('outOfStockItems');
     tasks = [];
     outOfStockItems = [];
     renderProducts();
@@ -431,10 +413,6 @@ document.addEventListener('DOMContentLoaded', () => {
   loadProducts(currentTab);
   loadTasks();
   renderTasks();
-  autoResetTasks();
-  autoResetStock();
-  setInterval(autoResetTasks, 60*1000);
-  setInterval(autoResetStock, 60*1000);
 });
 
 // ページトップへ戻るボタン
