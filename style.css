@@ -121,7 +121,6 @@ main {
   gap: 16px;
   margin: 18px 0 8px 0;
 }
-
 .tab {
   background: #23272A;
   color: #F3F4F6;
@@ -287,6 +286,11 @@ main {
   font-weight: 500;
   color: #F3F4F6;
   margin-right: 16px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .task-buttons {
   margin-left: auto;
@@ -500,9 +504,12 @@ main {
 }
 .task-item .task-name {
   max-width: none;
-  overflow: visible;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: normal;
-  text-overflow: unset;
 }
 .location-group {
   margin-bottom: 1.5rem;
