@@ -8,6 +8,7 @@ let outOfStockItems = JSON.parse(localStorage.getItem('outOfStockItems') || '[]'
 let lastTaskReset = localStorage.getItem('lastTaskReset') || '';
 let lastStockReset = localStorage.getItem('lastStockReset') || '';
 let outOfStockCounts = JSON.parse(localStorage.getItem('outOfStockCounts') || '{}');
+let outOfStockRestoreStatus = JSON.parse(localStorage.getItem('outOfStockRestoreStatus') || '{}');
 window.searchKeyword = '';
 
 // --- CSV Utility ---
@@ -224,10 +225,13 @@ function renderTasks() {
           if (!outOfStockItems.includes(task.id)) {
             outOfStockItems.push(task.id);
             // 個数記録
-            const count = tasks.filter(t => t.id === task.id).length;
-            outOfStockCounts[task.id] = count;
+            const sameTasks = tasks.filter(t => t.id === task.id);
+            outOfStockCounts[task.id] = sameTasks.length;
+            // 運搬済/未運搬状態も記録
+            outOfStockRestoreStatus[task.id] = sameTasks.map(t => t.status);
             localStorage.setItem('outOfStockItems', JSON.stringify(outOfStockItems));
             localStorage.setItem('outOfStockCounts', JSON.stringify(outOfStockCounts));
+            localStorage.setItem('outOfStockRestoreStatus', JSON.stringify(outOfStockRestoreStatus));
           }
           renderProducts();
           // 同IDタスク一括削除
@@ -274,14 +278,19 @@ function renderTasks() {
           localStorage.setItem('outOfStockItems', JSON.stringify(outOfStockItems));
           // 個数取得
           const restoreCount = outOfStockCounts[id] || 1;
+          // 運搬済/未運搬状態取得
+          const restoreStatusArr = outOfStockRestoreStatus[id] || [];
           delete outOfStockCounts[id];
+          delete outOfStockRestoreStatus[id];
           localStorage.setItem('outOfStockCounts', JSON.stringify(outOfStockCounts));
+          localStorage.setItem('outOfStockRestoreStatus', JSON.stringify(outOfStockRestoreStatus));
           renderProducts();
           // タスク復元
           for (let i = 0; i < restoreCount; i++) {
             const prodObj = products.find(p => p.id === id);
             if (prodObj) {
-              tasks.push({ ...prodObj, status: 'new', taskUid: Date.now() + Math.random() });
+              const status = restoreStatusArr[i] || 'new';
+              tasks.push({ ...prodObj, status, taskUid: Date.now() + Math.random() });
             }
           }
           saveTasks();
