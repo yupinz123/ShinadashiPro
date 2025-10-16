@@ -23,6 +23,12 @@
         <button id="settings-btn" class="settings-btn" title="設定" aria-label="設定"><span aria-hidden="true">⚙️</span></button>
       </div>
       <input type="search" id="search-box" placeholder="商品名で検索" autocomplete="off" aria-label="商品名検索">
+      <div id="paper-cat-buttons" style="display:none; margin-left:8px;">
+        <button class="paper-cat-btn" data-cat="all">全て</button>
+        <button class="paper-cat-btn" data-cat="キッチン">キッチン</button>
+        <button class="paper-cat-btn" data-cat="ティッシュ">ティッシュ</button>
+        <button class="paper-cat-btn" data-cat="トイレットペーパー">トイレットペーパー</button>
+      </div>
     </div>
     <section id="product-list" class="product-list" aria-label="商品一覧"></section>
     <section id="task-list" class="task-list" style="display:none" aria-label="タスク一覧"></section>
@@ -46,4 +52,3 @@
   <script src="script.js"></script>
 </body>
 </html>
-
