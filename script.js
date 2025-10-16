@@ -1,5 +1,5 @@
 // script.js - スーパー品出しSPA
-const CATEGORY_ORDER = ['お茶', '水', 'ジュース', '炭酸', '大型飲料', 'コーヒー', 'その他', 'キッチン', 'ティッシュ', 'トイレットペーパー'];
+const CATEGORY_ORDER = ['水', 'お茶', 'ジュース', '炭酸', '大型飲料', 'コーヒー', 'その他', 'キッチン', 'ティッシュ', 'トイレットペーパー'];
 const TAB_FILES = { drinks: 'drinks.csv', paper: 'paper.csv' };
 let currentTab = 'drinks';
 let products = [];
@@ -172,123 +172,130 @@ function deleteTask(taskUid) {
 function renderTasks() {
   const area = document.getElementById('task-list');
   area.innerHTML = '';
-  // グループ化
-  const grouped = {};
+
+  // 分類：通常、新規(=new), 未運搬(not-carried), 運搬済(carried)
+  const normal = [];
+  const notCarried = [];
+  const carried = [];
+
   tasks.forEach(t => {
-    // 検索フィルタ
-    if (window.searchKeyword && !t.name.toLowerCase().includes(window.searchKeyword)) return;
-    // 運搬済はカテゴリ表示から除外
-    if (t.status === 'carried') return;
-    const cat = t.category;
-    if (!grouped[cat]) grouped[cat] = [];
-    grouped[cat].push(t);
+    // 紙タブでカテゴリフィルタがある場合は適用
+    if (currentTab === 'paper' && window.paperCategoryFilter && t.category !== window.paperCategoryFilter) return;
+    // 検索フィルタ（紙タブでは検索を無効）
+    if (currentTab !== 'paper' && window.searchKeyword && !t.name.toLowerCase().includes(window.searchKeyword)) return;
+    if (t.status === 'carried') carried.push(t);
+    else if (t.status === 'not-carried') notCarried.push(t);
+    else normal.push(t);
   });
-  // タブごとに表示
-  const showCats = currentTab === 'drinks'
-    ? ['お茶', '水', 'ジュース', '炭酸', '大型飲料', 'コーヒー', 'その他']
-    : ['キッチン', 'ティッシュ', 'トイレットペーパー'];
-  showCats.forEach(cat => {
-    if (!grouped[cat]) return;
-    const catDiv = document.createElement('div');
-    catDiv.className = 'task-category';
-    catDiv.innerHTML = `<div class="task-category-title">${cat}</div>`;
-    grouped[cat].forEach((task, idx) => {
-      const item = document.createElement('div');
-      item.className = 'task-item';
-      if (task.status === 'carried') item.classList.add('carried');
-      if (task.status === 'not-carried') item.classList.add('not-carried');
-      item.innerHTML = `
-        <div class="task-item-content">
-          <img class="task-img" src="${task.imageUrl}" alt="img">
-          <div class="task-name">${task.name}</div>
-        </div>
-        <div class="task-buttons">
-          <button class="carried-btn">運搬済</button>
-          <button class="not-carried-btn">${task.status === 'not-carried' ? '在庫無' : '未運搬'}</button>
-          <button class="delete-btn">削除</button>
-        </div>
-      `;
-      item.querySelector('.carried-btn').onclick = () => {
-        task.status = 'carried';
-        grouped[cat].push(grouped[cat].splice(idx,1)[0]);
-        saveTasks();
-        renderTasks();
-      };
-      // 未運搬→在庫無
-      const notBtn = item.querySelector('.not-carried-btn');
-      if (task.status === 'not-carried') {
-        notBtn.classList.add('mark-out-of-stock');
-      }
-      notBtn.onclick = () => {
-        if (notBtn.classList.contains('mark-out-of-stock')) {
-          // 在庫無ボタン
-          if (!outOfStockItems.includes(task.id)) {
-            outOfStockItems.push(task.id);
-            // 個数記録
-            const sameTasks = tasks.filter(t => t.id === task.id);
-            outOfStockCounts[task.id] = sameTasks.length;
-            // 運搬済/未運搬状態も記録
-            outOfStockRestoreStatus[task.id] = sameTasks.map(t => t.status);
-            localStorage.setItem('outOfStockItems', JSON.stringify(outOfStockItems));
-            localStorage.setItem('outOfStockCounts', JSON.stringify(outOfStockCounts));
-            localStorage.setItem('outOfStockRestoreStatus', JSON.stringify(outOfStockRestoreStatus));
-          }
-          renderProducts();
-          // 同IDタスク一括削除
-          tasks = tasks.filter(t => t.id !== task.id);
-          saveTasks();
-          renderTasks();
-        } else {
-          task.status = 'not-carried';
-          notBtn.textContent = '在庫無';
-          notBtn.classList.add('mark-out-of-stock');
-          grouped[cat].push(grouped[cat].splice(idx,1)[0]);
-          saveTasks();
-          renderTasks();
-        }
-      };
-      item.querySelector('.delete-btn').onclick = () => {
-        tasks = tasks.filter(t => t.taskUid !== task.taskUid);
-        saveTasks();
-        renderTasks();
-      };
-      catDiv.appendChild(item);
+
+  // 表示順定義
+  const drinkOrder = ['水', 'お茶', 'ジュース', '炭酸', '大型飲料', 'コーヒー', 'その他'];
+  const paperOrder = ['キッチン', 'ティッシュ', 'トイレットペーパー'];
+
+  if (currentTab === 'drinks') {
+    // 通常タスク（カテゴリ順）
+    drinkOrder.forEach(cat => {
+      const items = normal.filter(t => t.category === cat);
+      if (!items.length) return;
+      const catDiv = document.createElement('div');
+      catDiv.className = 'task-category';
+      catDiv.innerHTML = `<div class="task-category-title">${cat}</div>`;
+      items.forEach(task => {
+        const item = document.createElement('div');
+        item.className = 'task-item';
+        item.innerHTML = `
+          <div class="task-item-content">
+            <img class="task-img" src="${task.imageUrl}" alt="img">
+            <div class="task-name">${task.name}</div>
+          </div>
+          <div class="task-buttons">
+            <button class="carried-btn">運搬済</button>
+            <button class="not-carried-btn">未運搬</button>
+            <button class="delete-btn">削除</button>
+          </div>`;
+        item.querySelector('.carried-btn').onclick = () => { task.status = 'carried'; saveTasks(); renderTasks(); };
+        item.querySelector('.not-carried-btn').onclick = () => { task.status = 'not-carried'; saveTasks(); renderTasks(); };
+        item.querySelector('.delete-btn').onclick = () => { tasks = tasks.filter(t => t.taskUid !== task.taskUid); saveTasks(); renderTasks(); };
+        catDiv.appendChild(item);
+      });
+      area.appendChild(catDiv);
     });
-    area.appendChild(catDiv);
-  });
-  // 在庫無商品一覧（重複なし）
-  const uniqueOutStock = Array.from(new Set(outOfStockItems));
-  if (uniqueOutStock.length > 0) {
-    const outDiv = document.createElement('div');
-    outDiv.className = 'out-stock-list';
-    outDiv.innerHTML = '<div class="out-stock-title">在庫無商品</div>';
-    uniqueOutStock.forEach(id => {
-      const prod = products.find(p => p.id === id);
-      if (prod) {
+
+    // 未運搬エリア（通常タスクの下、在庫無の上）
+    const hasNot = notCarried.length > 0;
+    if (hasNot) {
+      const notDiv = document.createElement('div');
+      notDiv.className = 'out-stock-list';
+      notDiv.innerHTML = '<div class="out-stock-title">未運搬商品</div>';
+      drinkOrder.forEach(cat => {
+        const items = notCarried.filter(t => t.category === cat);
+        if (!items.length) return;
+        items.forEach(task => {
+          // 同じ見た目・UIにするため通常タスクと同様の構成にする
+          const item = document.createElement('div');
+          item.className = 'task-item';
+          item.innerHTML = `
+            <div class="task-item-content">
+              <img class="task-img" src="${task.imageUrl}" alt="img">
+              <div class="task-name">${task.name}</div>
+            </div>
+            <div class="task-buttons">
+              <button class="carried-btn">運搬済</button>
+              <button class="not-carried-btn">${task.status === 'not-carried' ? '在庫無' : '未運搬'}</button>
+              <button class="delete-btn">削除</button>
+            </div>`;
+          // 各ボタンの挙動を通常タスクと同じにする
+          item.querySelector('.carried-btn').onclick = () => { task.status = 'carried'; saveTasks(); renderTasks(); };
+          item.querySelector('.not-carried-btn').onclick = () => {
+            // 在庫無に移す
+            if (!outOfStockItems.includes(task.id)) {
+              outOfStockItems.push(task.id);
+              const sameTasks = tasks.filter(t => t.id === task.id);
+              outOfStockCounts[task.id] = sameTasks.length;
+              outOfStockRestoreStatus[task.id] = sameTasks.map(t => t.status);
+              localStorage.setItem('outOfStockItems', JSON.stringify(outOfStockItems));
+              localStorage.setItem('outOfStockCounts', JSON.stringify(outOfStockCounts));
+              localStorage.setItem('outOfStockRestoreStatus', JSON.stringify(outOfStockRestoreStatus));
+            }
+            renderProducts();
+            tasks = tasks.filter(t => t.id !== task.id);
+            saveTasks();
+            renderTasks();
+          };
+          item.querySelector('.delete-btn').onclick = () => { tasks = tasks.filter(t2 => t2.taskUid !== task.taskUid); saveTasks(); renderTasks(); };
+          notDiv.appendChild(item);
+        });
+      });
+      area.appendChild(notDiv);
+    }
+  }
+
+  // 在庫無（ドリンクのみ表示）
+  if (currentTab === 'drinks') {
+    const uniqueOutStock = Array.from(new Set(outOfStockItems));
+    if (uniqueOutStock.length > 0) {
+      const outDiv = document.createElement('div');
+      outDiv.className = 'out-stock-list';
+      outDiv.innerHTML = '<div class="out-stock-title">在庫無商品</div>';
+      uniqueOutStock.forEach(id => {
+        const prod = products.find(p => p.id === id);
+        if (!prod) return;
         const item = document.createElement('div');
         item.className = 'out-stock-item';
         item.innerHTML = `
           <img class="task-img" src="${prod.imageUrl}" alt="img">
-          <span class="task-name">${prod.name}</span>
-        `;
-        // タスクに戻すボタン
+          <span class="task-name">${prod.name}</span>`;
         const restoreBtn = document.createElement('button');
         restoreBtn.className = 'restore-btn';
         restoreBtn.textContent = 'タスクに戻す';
         restoreBtn.onclick = () => {
-          // 在庫無解除
           outOfStockItems = outOfStockItems.filter(x => x !== id);
           localStorage.setItem('outOfStockItems', JSON.stringify(outOfStockItems));
-          // 個数取得
           const restoreCount = outOfStockCounts[id] || 1;
-          // 運搬済/未運搬状態取得
           const restoreStatusArr = outOfStockRestoreStatus[id] || [];
-          delete outOfStockCounts[id];
-          delete outOfStockRestoreStatus[id];
+          delete outOfStockCounts[id]; delete outOfStockRestoreStatus[id];
           localStorage.setItem('outOfStockCounts', JSON.stringify(outOfStockCounts));
           localStorage.setItem('outOfStockRestoreStatus', JSON.stringify(outOfStockRestoreStatus));
-          renderProducts();
-          // タスク復元
           for (let i = 0; i < restoreCount; i++) {
             const prodObj = products.find(p => p.id === id);
             if (prodObj) {
@@ -296,31 +303,130 @@ function renderTasks() {
               tasks.push({ ...prodObj, status, taskUid: Date.now() + Math.random() });
             }
           }
-          saveTasks();
-          renderTasks();
+          saveTasks(); renderTasks(); renderProducts();
         };
         item.appendChild(restoreBtn);
         outDiv.appendChild(item);
-      }
-    });
-    area.appendChild(outDiv);
+      });
+      area.appendChild(outDiv);
+    }
   }
 
-  // 運搬済タスク一覧（重複なし）
-  const carriedTasks = tasks.filter(t => t.status === 'carried');
-  if (carriedTasks.length > 0) {
+  // 紙タブの特別表示：集約表示（同IDを1行にまとめ、カウント表示）
+  if (currentTab === 'paper') {
+    // 集約対象（フィルタ済み tasks の中の ids）
+    const ids = Array.from(new Set(tasks.map(t => t.id)));
+    // カテゴリ選択がある場合、さらに絞る
+    const filteredIds = ids.filter(id => {
+      const prod = products.find(p => p.id === id);
+      if (!prod) return false;
+      if (window.paperCategoryFilter && prod.category !== window.paperCategoryFilter) return false;
+      return true;
+    });
+    filteredIds.forEach(id => {
+      const prod = products.find(p => p.id === id);
+      if (!prod) return;
+      const totalAdded = taskCounts[id] || tasks.filter(t => t.id === id).length;
+      const carriedCount = tasks.filter(t => t.id === id && t.status === 'carried').length;
+      // すでに全数運搬済ならこの行を表示せず、運搬済欄へ移動させる
+      if (carriedCount >= totalAdded && totalAdded > 0) return;
+      const item = document.createElement('div');
+      item.className = 'task-item';
+      item.innerHTML = `
+        <div class="task-item-content">
+          <img class="task-img" src="${prod.imageUrl}" alt="img">
+          <div class="task-name">${prod.name}</div>
+        </div>`;
+      // ボタン：運搬済・削除のみ
+      const btnWrap = document.createElement('div'); btnWrap.className = 'task-buttons';
+      const carriedBtn = document.createElement('button'); carriedBtn.className = 'carried-btn'; carriedBtn.textContent = '運搬済';
+      carriedBtn.onclick = () => {
+        // 一つだけ未運搬/newのタスクを運搬済にする（カウントアップ）
+        const target = tasks.find(t => t.id === id && t.status !== 'carried');
+        if (target) {
+          target.status = 'carried';
+          saveTasks();
+          renderTasks();
+        }
+      };
+      const delBtn = document.createElement('button'); delBtn.className = 'delete-btn'; delBtn.textContent = '削除';
+      delBtn.onclick = () => {
+        tasks = tasks.filter(t => t.id !== id);
+        taskCounts[id] = 0;
+        saveTasks(); renderTasks(); renderProducts();
+      };
+  btnWrap.appendChild(carriedBtn);
+  btnWrap.appendChild(delBtn);
+      item.appendChild(btnWrap);
+      // カウント表示（削除ボタンの下）
+      const countEl = document.createElement('div');
+      countEl.style.textAlign = 'center';
+      countEl.style.fontSize = '0.95rem';
+      countEl.style.color = '#888';
+      countEl.textContent = `${carriedCount}/${totalAdded}`;
+      item.appendChild(countEl);
+      area.appendChild(item);
+    });
+    // 紙タブでは在庫無リストは表示しない
+    // NOTE: ここで return してしまうと下の「運搬済一覧」が描画されないため、
+    // 紙タブでも運搬済をページ下部に表示するために return を除去する。
+  }
+
+  // --- 紙タブ：未運搬商品をカテゴリごとに表示 ---
+  if (currentTab === 'paper') {
+    const hasNotPaper = notCarried.length > 0;
+    if (hasNotPaper) {
+      const notDiv = document.createElement('div');
+      notDiv.className = 'out-stock-list';
+      notDiv.innerHTML = '<div class="out-stock-title">未運搬商品</div>';
+      paperOrder.forEach(cat => {
+        const items = notCarried.filter(t => t.category === cat);
+        if (!items.length) return;
+        items.forEach(task => {
+          const item = document.createElement('div');
+          item.className = 'task-item';
+          item.innerHTML = `
+            <div class="task-item-content">
+              <img class="task-img" src="${task.imageUrl}" alt="img">
+              <div class="task-name">${task.name}</div>
+            </div>
+            <div class="task-buttons">
+              <button class="carried-btn">運搬済</button>
+              <button class="not-carried-btn">${task.status === 'not-carried' ? '在庫無' : '未運搬'}</button>
+              <button class="delete-btn">削除</button>
+            </div>`;
+          item.querySelector('.carried-btn').onclick = () => { task.status = 'carried'; saveTasks(); renderTasks(); };
+          item.querySelector('.not-carried-btn').onclick = () => {
+            if (!outOfStockItems.includes(task.id)) {
+              outOfStockItems.push(task.id);
+              const sameTasks = tasks.filter(t => t.id === task.id);
+              outOfStockCounts[task.id] = sameTasks.length;
+              outOfStockRestoreStatus[task.id] = sameTasks.map(t => t.status);
+              localStorage.setItem('outOfStockItems', JSON.stringify(outOfStockItems));
+              localStorage.setItem('outOfStockCounts', JSON.stringify(outOfStockCounts));
+              localStorage.setItem('outOfStockRestoreStatus', JSON.stringify(outOfStockRestoreStatus));
+            }
+            renderProducts();
+            tasks = tasks.filter(t => t.id !== task.id);
+            saveTasks();
+            renderTasks();
+          };
+          item.querySelector('.delete-btn').onclick = () => { tasks = tasks.filter(t2 => t2.taskUid !== task.taskUid); saveTasks(); renderTasks(); };
+          notDiv.appendChild(item);
+        });
+      });
+      area.appendChild(notDiv);
+    }
+  }
+
+  // 運搬済タスク一覧（カテゴリ順）
+  if (carried.length > 0) {
     const carriedDiv = document.createElement('div');
     carriedDiv.className = 'out-stock-list';
     carriedDiv.innerHTML = '<div class="out-stock-title">運搬済商品</div>';
-    // category順でグループ化
     const grouped = {};
-    carriedTasks.forEach(t => {
-      if (!grouped[t.category]) grouped[t.category] = [];
-      grouped[t.category].push(t);
-    });
-    const showCats = currentTab === 'drinks'
-      ? ['お茶', '水', 'ジュース', '炭酸', '大型飲料', 'コーヒー', 'その他']
-      : ['キッチン', 'ティッシュ', 'トイレットペーパー'];
+    carried.forEach(t => { if (!grouped[t.category]) grouped[t.category] = []; grouped[t.category].push(t); });
+    const showCats = currentTab === 'drinks' ? drinkOrder : paperOrder;
     showCats.forEach(cat => {
       if (!grouped[cat]) return;
       grouped[cat].forEach(task => {
@@ -328,30 +434,12 @@ function renderTasks() {
         item.className = 'out-stock-item carried';
         item.innerHTML = `
           <img class="task-img" src="${task.imageUrl}" alt="img">
-          <span class="task-name">${task.name}</span>
-        `;
-        // 削除ボタン
-        const delBtn = document.createElement('button');
-        delBtn.className = 'delete-btn';
-        delBtn.textContent = '削除';
-        delBtn.onclick = () => {
-          tasks = tasks.filter(t2 => t2.taskUid !== task.taskUid);
-          saveTasks();
-          renderTasks();
-        };
-        // 未運搬ボタン
-        const notBtn = document.createElement('button');
-        notBtn.className = 'not-carried-btn';
-        notBtn.textContent = '未運搬';
-        notBtn.onclick = () => {
-          task.status = 'new';
-          saveTasks();
-          renderTasks();
-        };
-        const btns = document.createElement('div');
-        btns.className = 'carried-task-buttons';
-        btns.appendChild(delBtn);
-        btns.appendChild(notBtn);
+          <span class="task-name">${task.name}</span>`;
+        const delBtn = document.createElement('button'); delBtn.className = 'delete-btn'; delBtn.textContent = '削除';
+        delBtn.onclick = () => { tasks = tasks.filter(t2 => t2.taskUid !== task.taskUid); saveTasks(); renderTasks(); };
+        const notBtn = document.createElement('button'); notBtn.className = 'not-carried-btn'; notBtn.textContent = '未運搬';
+        notBtn.onclick = () => { task.status = 'new'; saveTasks(); renderTasks(); };
+        const btns = document.createElement('div'); btns.className = 'carried-task-buttons'; btns.appendChild(delBtn); btns.appendChild(notBtn);
         item.appendChild(btns);
         carriedDiv.appendChild(item);
       });
@@ -418,6 +506,17 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('task-list').style.display = '';
     document.getElementById('subtab-products').classList.remove('active');
     document.getElementById('subtab-tasks').classList.add('active');
+    // 紙タブ時は検索を非表示にしてカテゴリボタンを表示（初期は全て）
+    const searchBox = document.getElementById('search-box');
+    const paperBtns = document.getElementById('paper-cat-buttons');
+    if (currentTab === 'paper') {
+      if (searchBox) searchBox.style.display = 'none';
+      if (paperBtns) paperBtns.style.display = '';
+      window.paperCategoryFilter = null; // 初期は全て
+    } else {
+      if (searchBox) searchBox.style.display = '';
+      if (paperBtns) paperBtns.style.display = 'none';
+    }
   };
   document.getElementById('subtab-products').onclick = () => {
     document.getElementById('product-list').style.display = '';
@@ -426,6 +525,18 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('subtab-products').classList.add('active');
     document.getElementById('subtab-tasks').classList.remove('active');
   };
+  // 紙カテゴリボタン群のクリックイベント
+  const paperBtns = document.querySelectorAll('.paper-cat-btn');
+  if (paperBtns) {
+    paperBtns.forEach(b => b.addEventListener('click', (e) => {
+      const cat = e.currentTarget.getAttribute('data-cat');
+      window.paperCategoryFilter = cat === 'all' ? null : cat;
+      // 見た目のactive付け
+      paperBtns.forEach(x => x.classList.remove('active'));
+      e.currentTarget.classList.add('active');
+      renderTasks();
+    }));
+  }
   // 設定ボタン
   document.getElementById('settings-btn').onclick = () => {
     document.getElementById('settings-modal').style.display = 'flex';
