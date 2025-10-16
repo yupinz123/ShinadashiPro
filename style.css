@@ -371,6 +371,9 @@ main {
   color: #EF4444;
   margin-bottom: 10px;
 }
+.out-stock-list .out-stock-title {
+  color: #F59E42;
+}
 .out-stock-item {
   display: flex;
   align-items: center;
@@ -523,6 +526,28 @@ main {
   height: auto;
   filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2));
 }
+.paper-cat-btn {
+  background: var(--tab-inactive);
+  color: var(--text-secondary);
+  border: none;
+  border-radius: 8px;
+  padding: 6px 10px;
+  margin-right: 6px;
+  cursor: pointer;
+}
+.paper-cat-btn.active {
+  background: var(--tab-active);
+  color: #fff;
+}
+.carried-task-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 0.7rem;
+  margin-left: auto;
+}
+.out-stock-item .carried-btn { order: 3; }
+.out-stock-item .not-carried-btn { order: 2; }
+.out-stock-item .delete-btn { order: 1; }
 .task-item .task-img {
   width: 90px;
   height: 90px;
@@ -846,6 +871,12 @@ body {
   font-size: 1rem;
   font-weight: 600;
   color: #222;
+}
+.task-item .count-el {
+  text-align: center;
+  font-size: 0.95rem;
+  color: #6b7280;
+  margin-top: 6px;
 }
 .task-item .task-buttons {
   display: flex;
