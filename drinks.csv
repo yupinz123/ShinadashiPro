@@ -1,15 +1,17 @@
 ﻿id,name,imageUrl,category,location,Count,tasks,order
 d1,COOP 有機栽培グリーンルイボスティー,https://www.coop-kobe.net/ito/product/49022/201/591/4902220159116/4902220159116_0001_l.jpg,お茶,冷通常飲料,0,,0
 d2,COOP ジャスミン茶,https://www.coop-kobe.net/ito/product/02052/500/002/0205250000262/0205250000262_0001_l.jpg,お茶,冷通常飲料,0,,1
+d2.5,COOP 麦茶（国産六条大麦使用）,https://www.coop-kobe.net/ito/product/49022/207/724/4902220772490/4902220772490_0001_l.jpg,お茶,冷通常飲料,0,,1.1
 d3,COOP まろやかほうじ茶,https://goods.jccu.coop/lineup/com-images/00208185.jpg,お茶,冷通常飲料,0,,2
 d4,ジョージア カフェラテ,https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKuE1B1HYsFk3GzJKNj_7AP56DeIbAMCuGzZj784ec_axpkye3MsVz0R0&s=10,ジュース,冷通常飲料,0,,3
 d5,ジョージア ブラック,https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRO4B5OSjNgCbuqTKOrPZ6VoMaLuRqWsriYG8W8D6fZQIZoAewOiyrEh8&s=10,ジュース,冷通常飲料,0,,4
+d5.1,とろけるカフェオレ,https://m.media-amazon.com/images/I/61tqUhsQHwL._AC_SL1000_.jpg,ジュース,冷通常飲料,0,,4.1
 d6,クラフトボス ラテ 500ml,https://tshop.r10s.jp/scbmitsuokun1972/cabinet/food/bargain/bargain_4/4901777300545.jpg?fitin=720%3A720,ジュース,冷通常飲料,0,,5
 d7,クラフトボス ブラック 500ml,https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMY1UoYMwumAasCECaVLJWH4h6181d5f9X0LEfEPW761a_yRnwPmzWnNm8&s=10,ジュース,冷通常飲料,0,,6
 d8,キレートレモンクエン酸 525ml,https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXraJkZNCnn0VTq_kstUP_0MK-VL6-OazKAfPB4YWE1fxt48qd_T6OwPBP&s=10,炭酸,冷通常飲料,0,,7
 d9,カルピスウォーター 500ml,https://mrmax.jp/static_files/product_images/4901340877917_01.jpg?text=カルピス,ジュース,冷通常飲料,0,,8
 d9.1,MMゼロシュガーレモネード 600ml,https://tshop.r10s.jp/hokkkaido/cabinet/fulutu/mm-zerolemon60p-2.jpg?fitin=720%3A720,ジュース,冷通常飲料,0,,8.1
-d10,カルピス THE RICH 470ml,https://tshop.r10s.jp/nishimuta/cabinet/image109/4901340094048_1.jpg?fitin=720%3A720,ジュース,冷通常飲料,0,,9
+d10,カルピス 濃いめ 490ml,https://tshop.r10s.jp/liquor-boss/cabinet/syouhingazou3/33481.jpg?downsize=300:*,ジュース,冷通常飲料,0,,9
 d11,キリンレモン 500ml,https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgFujMnoOBYI6e5ZLMeLt4m4VMUTD_IE7axwp4o4EKC-FJM9OuZkZNg78&s=10,炭酸,冷通常飲料,0,,10
 d12,三ツ矢サイダー 500ml,https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTwTfSxYAtO4FlBNnpc31pIvqLWcIlX5Bd69CORMnPzL00hxEv2qV1aMgK&s=10,炭酸,冷通常飲料,0,,11
 d13,デカビタC,https://image1.shopserve.jp/komachiline.co.jp/pic-labo/dekabita.png,炭酸,冷通常飲料,0,,12
@@ -18,14 +20,15 @@ d15,キレートレモンWレモン 500ml,https://encrypted-tbn0.gstatic.com/ima
 d16,特製レモンスカッシュ,https://item-shopping.c.yimg.jp/i/n/liquor-boss1_27004,炭酸,冷通常飲料,0,,15
 d17,京都レモネード 525ml,https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQefhwECy4XQJ1bVhf7hPtVXu7BpXpQX0dlaihaEY8zjeRJ9v2iGoShu_g&s=10,ジュース,冷通常飲料,0,,16
 d18,ミニッツメイド ゼロシュガー レモネード,https://shop.r10s.jp/liquor-boss/cabinet/03382778/11873802/31808c2.jpg,ジュース,冷通常飲料,0,,17
-d18.1,COOP スポーツドリンク,https://www.coop-kobe.net/ito/product/49022/200/695/4902220069569/4902220069569_0001_l.jpg,ジュース,冷通常飲料,0,,17.1
+d18.1,ミニッツメイド ゼロシュガー ピーチレモネード,https://www.coca-cola.com/content/dam/onexp/jp/ja/brands/minute-maid/zero-sugar/zero-sugar_card_peach.png/width1960.png,ジュース,冷通常飲料,0,,17.1
+d18.2,COOP スポーツドリンク,https://www.coop-kobe.net/ito/product/49022/200/695/4902220069569/4902220069569_0001_l.jpg,ジュース,冷通常飲料,0,,17.2
 d19,サントリー 天然水 550ml,https://www.miraido-onlineshop.com/images/item/original/suf0001_1.jpg,水,冷通常飲料,0,,18
 d20,スターバックス® COFFEE OF THE DAY ブラック,https://www.suntory.co.jp/products/pimg/FSBAN_R1_20250604.jpg?_x=254&_y=659,ジュース,冷通常飲料,0,,19
 d21,スターバックス® COFFEE OF THE DAY カフェラテ,https://greenbeans.com/images-v3/89edeb69-fe10-49ca-baab-5c51900239b9/cf42c050-ff77-40cb-a244-19f4be1b15cf/1280x1280.webp,ジュース,冷通常飲料,0,,20
 d22,十六茶 630ml,https://tshop.r10s.jp/auc-orangetokei/cabinet/fr00786/pj3479y.jpg?fitin=720%3A720,お茶,冷通常飲料,0,,21
 d23,サントリー 烏龍茶 600ml,https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnutS_CIJvITiphYljG24rLk3LPLt_-7r5ONjpzGsx4Z90mo0JSSdRRxps&s=10,お茶,冷通常飲料,0,,22
-d24,COOP 麦茶（国産六条大麦使用）,https://www.coop-kobe.net/ito/product/49022/207/724/4902220772490/4902220772490_0001_l.jpg,お茶,冷通常飲料,0,,23
-d25,COOP ハト麦入りさわやかブレンド茶,https://coop-sateto.jp/wp/wp-content/uploads/2019/05/cb02e831070d2427f2933ebf70acd0fb.jpg?text=お茶,お茶,冷通常飲料,0,,24
+d24,COOP ハト麦入りさわやかブレンド茶,https://coop-sateto.jp/wp/wp-content/uploads/2019/05/cb02e831070d2427f2933ebf70acd0fb.jpg?text=お茶,お茶,冷通常飲料,0,,23
+d25,COOP 濃い緑茶 525ｍｌ,https://goods.jccu.coop/lineup/com-images/00238908.jpg,お茶,冷通常飲料,0,,24
 d26,COOP 抹茶入りにごり緑茶 525ml,https://www.coop-kobe.net/ito/product/49022/200/163/4902220016341/4902220016341_0001_l.jpg,お茶,冷通常飲料,0,,25
 d27,COOP 緑茶 525ml,https://www.coop-kobe.net/ito/product/02431/800/009/0243180000945/0243180000945_0001_l.jpg,お茶,冷通常飲料,0,,26
 d28,伊右衛門 お茶 600ml,https://www.suntory.co.jp/news/article/mt_items/l_sbf1548-2.jpg,お茶,冷通常飲料,0,,27
@@ -36,10 +39,10 @@ d32,やかんの濃麦茶,https://news.nissyoku.co.jp/wp-content/uploads/2024/05
 d33,やさしい麦茶,https://item-shopping.c.yimg.jp/i/l/felicity-y_suf0071,お茶,冷通常飲料,0,,32
 d34,贅沢ミルクコーヒー,https://m.media-amazon.com/images/I/61sPAKGzQCL._AC_SX679_.jpg,ジュース,冷通常飲料,0,,33
 d34.1,Welch's 1房分のぶどう 470ml,https://tshop.r10s.jp/auc-orangetokei/cabinet/fr00786/pj3483y.jpg?fitin=720%3A720,ジュース,冷通常飲料,0,,33.1
-d35,とろけるカフェオレ,https://m.media-amazon.com/images/I/61tqUhsQHwL._AC_SL1000_.jpg,ジュース,冷通常飲料,0,,34
 d36,なっちゃん オレンジ 425ml,https://tshop.r10s.jp/jetprice/cabinet/w55/164924.jpg?fitin=720%3A720,ジュース,冷通常飲料,0,,35
 d37,なっちゃん りんご 425ml,https://thumbnail.image.rakuten.co.jp/@0_mall/liquor-boss/cabinet/03382778/09562994/6403c1.jpg,ジュース,冷通常飲料,0,,36
 d37.1,FRUITS & ICE TEA オレンジとグレープフルーツ,https://m.media-amazon.com/images/I/61dVt20zJ+L._AC_SL1000_.jpg,ジュース,冷通常飲料,0,,36.1
+d37.2,ソルティライチ 500ml,https://www.kirin.co.jp/products/list/images/336680b.jpg,ジュース,冷通常飲料,0,,36.2
 d38,グリーンダカラ,https://www.miraido-onlineshop.com/images/item/original/suf0124_1.jpg,ジュース,冷通常飲料,0,,37
 d39,天然水スパークリング,https://www.miraido-onlineshop.com/images/item/original/suf0374_1.jpg,炭酸,冷通常飲料,0,,38
 d40,天然水スパークリング レモン,https://item-shopping.c.yimg.jp/i/n/misono-support_b21-640,炭酸,冷通常飲料,0,,39
