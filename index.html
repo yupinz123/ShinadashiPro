@@ -55,6 +55,273 @@
       allow="microphone">
     </iframe>
     </section>
+    <!-- マニュアルエリア -->
+    <section id="manual-area" style="display:none" aria-label="業務マニュアル">
+      <div class="manual-header">
+        <h2 class="manual-title">📖 ドライマニュアル</h2>
+        <div class="manual-header-buttons">
+          <a href="バイトマニュアル.pdf" target="_blank" class="manual-pdf-link">PDF版を開く</a>
+          <button id="close-manual-btn" class="close-manual-btn" aria-label="閉じる">✕</button>
+        </div>
+      </div>
+      <div class="manual-content">
+        <!-- 基本ルール -->
+        <details class="manual-section" open>
+          <summary class="manual-section-title">基本ルール</summary>
+          <div class="manual-section-body">
+            <ul>
+              <li>先入れ先出しを徹底する</li>
+              <li>日付チェックを行う（紙・ゴミ袋以外。ハーフカート内、オリコン・棚上、売り場全て）</li>
+              <li>前出しは「見やすく、選びやすく、手に取りやすく」を意識する</li>
+              <li>左から右へ最低2列＋フェイスアップ、上から下へ配置する</li>
+              <li>コープの日前日は、コープ商品をめいっぱい入れる</li>
+            </ul>
+          </div>
+        </details>
+        <!-- 飲料 -->
+        <details class="manual-section">
+          <summary class="manual-section-title">🥤 飲料</summary>
+          <div class="manual-section-body">
+            <h4>補充手順</h4>
+            <ol>
+              <li><strong>オリコン処理</strong>: バックヤードから出し、入る分を補充する。通路の邪魔にならない場所に適宜工夫して配置</li>
+              <li><strong>棚上整理</strong>: ストックを優先的に下ろして売り場を埋め、一度簡単に前出しをしてから次の作業へ</li>
+              <li><strong>補充メモ</strong>:
+                <ul>
+                  <li>500ml: 残り3列未満をメモする（よく売れる商品や棚の1番下などは、箱半分入るなら入れる。例：綾鷹、午後ティーなど）</li>
+                  <li>1.5L/2L: 空き3個以上、または売り場が2列のものは、全体的に満タンに入れる</li>
+                </ul>
+                <div class="manual-tip">💡 <strong>メモのコツ</strong>: 商品名ではなく、ボトルの周りについているラベルのデザインを見てメモを取る。バックヤードでデザインを一致させる方が圧倒的に早い。バックヤードにある在庫のハーフカートごとにメモを取る</div>
+              </li>
+              <li><strong>積み込み・陳列</strong>:
+                <ul>
+                  <li>冷蔵庫付近、水産裏（紙カートの反対側）、検収室裏などを確認する</li>
+                  <li>日付が前後していることもあるのでチェックして積み込む</li>
+                  <li>基本的にバラして補充OK（※特茶など「おまけ付き」はバラさない）</li>
+                </ul>
+              </li>
+              <li><strong>その他飲料の補充</strong>:
+                <ul>
+                  <li>野菜ジュース、トマトジュース、コーヒーも補充する</li>
+                  <li>月山の水同様、エンド・定番・コーナーにあるものの補充を行う</li>
+                  <li>底上げだけでなく、空箱があれば箱ごとの補充も行う</li>
+                </ul>
+              </li>
+              <li><strong>完了処理</strong>:
+                <ul>
+                  <li>余りは棚上かオリコンへ戻す</li>
+                  <li>前出し棒は必ず棚の上の所定の位置に戻す</li>
+                </ul>
+              </li>
+              <li><strong>在庫整理</strong>: 検収室裏の在庫整理を行う
+                <ul>
+                  <li>バックヤードのハーフカートに載せれるだけ載せる</li>
+                  <li>余ったハーフカートは外の置き場に分解して片付ける</li>
+                </ul>
+              </li>
+            </ol>
+            <h4>ホット飲料・レジ横</h4>
+            <ul>
+              <li>補充時に「2週間後」のラベルを貼る</li>
+              <li>期限が当日・翌日の場合: 値引き機を使用して50%割引処理を行い、売り切る</li>
+              <li>ラベラーのラベル交換: ①上→下→中の3箇所の黒パーツを外す ②新しいラベルを上から通してセットする</li>
+              <li>レジ横は業者の方がやってくれるが、定番の商品がない時はここから補充する。底上げ、前出しは行う</li>
+            </ul>
+            <h4>酒フォロー</h4>
+            <ul>
+              <li>ナイトマネージャー不在時に1.5〜2時間おきにチェックし、基本は前出しを行う</li>
+              <li>在庫ないものは6缶パックの商品からバラして出してOK</li>
+            </ul>
+            <h4>ワンデー・スーパー朝市の時</h4>
+            <ul>
+              <li>菓子、コーヒーの所にある飲料は売れるので適宜補充、底上げを行う</li>
+            </ul>
+          </div>
+        </details>
+        <!-- 日配 -->
+        <details class="manual-section">
+          <summary class="manual-section-title">🧊 日配（洋日配→和日配→卵・パン）</summary>
+          <div class="manual-section-body">
+            <h4>日配基本ルール</h4>
+            <ul>
+              <li>セール品、広告掲載品はチェックして都度在庫出しを行う（順番変動あり、臨機応変に対応する）</li>
+              <li>牛乳・卵・豆腐・納豆・ヨーグルトを重点的にチェックする</li>
+              <li>ハーフカート内、売り場の日付を常にチェックしながら行う</li>
+              <li>売り切り商品、供給期限撤去もれ、見落とし、陳列の日付がバラバラなこと（先入れ先出しになっていない、陳列ルールが守られてない）が多いので、見つけ次第対応する</li>
+            </ul>
+            <h4>冷蔵庫配置と陳列</h4>
+            <ul>
+              <li>左側＝洋日配、右側＝和日配</li>
+              <li>売り場（定番）: 賞味期限の早い（古い）ものを置く</li>
+              <li>平台: 賞味期限の遅い（新しい）ものを置く</li>
+              <li>※牛乳や果汁100%などのチルドカップ飲料等は日付が違ってもめいっぱい入れる ※鈴木チーフのやり方</li>
+            </ul>
+            <h4>値引き・片付け</h4>
+            <div class="manual-highlight">
+              <strong>17:30</strong> — 30%引き（菓子パン・デザート）<br>
+              漏れを見つけた時の食パンは30%、和菓子は20％、和日配担当の方不在時は平台の商品を50%引きにする。前の担当者が20％引きにしてる場合もあるので、売れ行きも見ておく
+            </div>
+            <div class="manual-highlight">
+              <strong>19:30</strong> — 50%引き（菓子パン、デザートなど全て）
+            </div>
+            <div class="manual-highlight">
+              <strong>20:30〜21:00</strong> — 最終値引き（60〜70%）。最大80%まで可
+            </div>
+            <div class="manual-warning">⚠️ <strong>重要</strong>: 同一金額でも、商品種類（JANコード）ごとにスキャンをして値引く</div>
+            <ul>
+              <li>商品名、賞味期限、アレルギー表示にかぶらないよう、バーコードの縦線1ヶ所が消えるように値引きシールを貼る</li>
+            </ul>
+            <h4>かご整理</h4>
+            <ul>
+              <li>牛乳、白バット（COOP）、その他の種類ごとに重ねて片付ける。黄色バットは銀色の扉つきの台車に入れる</li>
+            </ul>
+          </div>
+        </details>
+        <!-- 食品・菓子 -->
+        <details class="manual-section">
+          <summary class="manual-section-title">🍪 食品・菓子</summary>
+          <div class="manual-section-body">
+            <ul>
+              <li>カテゴリー割引がある時はカテ割の棚上、前出しから行う（品薄の時は在庫出しも行う）</li>
+            </ul>
+            <h4>1. 棚上在庫を下ろす</h4>
+            <ul>
+              <li>商品の下に違う商品、奥に隠れてる商品、点在している商品が多いので整理整頓しながら行う（土日月は特に念入りに行う）</li>
+            </ul>
+            <h4>2. 品出し</h4>
+            <ul>
+              <li>バックヤードのカップ麺から油類までのハーフカートの範囲</li>
+              <li><strong>順番</strong>: ハーフカート内オリコン → ハーフカート内段ボール箱 → 在庫置き場の箱（冷蔵庫側、検収室裏、出入口にもあることも）</li>
+            </ul>
+            <h4>注意点</h4>
+            <div class="manual-warning">⚠️ <strong>重要</strong>: 棚上、オリコン、売り場での同一商品の日付がバラバラな時は、1番古い（賞味期限が早い）ものを売り場に陳列し直す</div>
+            <div class="manual-warning">⚠️ <strong>重要</strong>: カップ麺は最初と最後チェックして在庫出し、底上げを行い、エンドも満タンにする</div>
+            <ul>
+              <li>お米は指示があった時だけ検収室裏から補充する</li>
+              <li>雑穀などはオリコン内、箱ともにチェックして出す。米エンド脇にあるもち麦の底上げも行う</li>
+              <li>菓子（ポッキーなどの箱）、パスタソース、ふりかけなどの外箱は中身が3ヶ位になったら捨てて前出しする</li>
+            </ul>
+          </div>
+        </details>
+        <!-- 冷食・アイス -->
+        <details class="manual-section">
+          <summary class="manual-section-title">🍦 冷食・アイス</summary>
+          <div class="manual-section-body">
+            <h4>開始前</h4>
+            <ul>
+              <li>平台補充の禁止指示（ノート・口頭）がないか必ず確認する</li>
+              <li>アイス担当になったら氷も担当する</li>
+              <li>アイスソーダ、フローズンヨーグルト、スーパーカップ、うずまきソフトは賞味期限に注意する</li>
+            </ul>
+            <h4>仕事内容</h4>
+            <ul>
+              <li>入荷分のハーフカートがある時は、在庫のハーフカートを出してから入荷分を出す。めいっぱい入れて良い</li>
+            </ul>
+            <h4>冷凍庫整理</h4>
+            <ul>
+              <li>在庫をまとめ（在庫ハーフカート内の整理整頓を行う）</li>
+              <li>入荷で入ってきた分のハーフカートは外の置き場に片付ける</li>
+            </ul>
+            <div class="manual-warning">⚠️ <strong>鉄則</strong>: ロードラインを越えない／扉を閉める／賞味期限を守る</div>
+            <h4>注意点</h4>
+            <ul>
+              <li>冷食の肉は別部門のため触らない</li>
+            </ul>
+          </div>
+        </details>
+        <!-- 紙類・ゴミ袋 -->
+        <details class="manual-section">
+          <summary class="manual-section-title">🧻 紙類・ゴミ袋</summary>
+          <div class="manual-section-body">
+            <ul>
+              <li>品薄商品をメモし（どれがいくつ必要か）</li>
+              <li>バックヤードから持ってきて補充する（HOT飲料の隣、検収室裏もチェックする）</li>
+            </ul>
+            <div class="manual-warning">⚠️ <strong>★重要</strong>: セールの時、広告掲載商品は1度ではなく何度もチェックして補充する</div>
+            <ul>
+              <li>品切れポップが置いてある商品でも見落としていることがあるので一通りチェックする</li>
+            </ul>
+          </div>
+        </details>
+        <!-- 入荷 -->
+        <details class="manual-section">
+          <summary class="manual-section-title">📦 入荷</summary>
+          <div class="manual-section-body">
+            <h4>仕事内容</h4>
+            <ul>
+              <li>入荷分の賞味期限が売り場商品より古い時もあるので常にチェックしながら出す</li>
+              <li>箱を開けたら残りは棚上に置く</li>
+            </ul>
+            <h4>片付け</h4>
+            <ul>
+              <li>オリコン外側に入ってる白い紙は捨てる</li>
+              <li>オリコンをまとめて外の置き場へ持っていき、ブルーシートとフックをかける</li>
+              <li>ハーフカートはストッパーをかける</li>
+            </ul>
+          </div>
+        </details>
+        <!-- ゴミ捨て -->
+        <details class="manual-section">
+          <summary class="manual-section-title">🗑️ ゴミ捨て</summary>
+          <div class="manual-section-body">
+            <h4>赤い台車</h4>
+            <ul>
+              <li>ダンボールの捨て場</li>
+              <li>台車ごとバック（か外）へ運び、外から新しい台車を持ち込み組み立て、ストッパーをかける</li>
+            </ul>
+            <h4>紙ゴミ</h4>
+            <ul>
+              <li>ティッシュが入っていた空ダンボールを組み立てる</li>
+              <li>底を十字に、上部をガムテープで固定してゴミ箱として使う</li>
+            </ul>
+            <h4>袋の交換</h4>
+            <ul>
+              <li><strong>白色（燃えるゴミ）</strong>: 2回縛って生ごみ置き場へ。新しい袋は段ボール奥から</li>
+              <li><strong>黄色（プラゴミ）</strong>: 外の置き場に捨てる。検収室扉付近から新しい袋を取る</li>
+            </ul>
+            <p>ダンボール以外、他部門のゴミもここに捨てられるので、適宜対応する</p>
+          </div>
+        </details>
+        <!-- 端末操作・内線・その他 -->
+        <details class="manual-section">
+          <summary class="manual-section-title">📱 端末操作・内線・その他</summary>
+          <div class="manual-section-body">
+            <p>終わったら充電して終了する</p>
+            <h4>キーエンス操作</h4>
+            <div class="manual-tip">起動：電源 → 循環式 → 11327 → 日付変更（1週間後） → 全体 → 絞り込み → 日付未登録を外す → アラート</div>
+            <ul>
+              <li>古い期限をスキャンし、「元の金額部分」にチェックを入れて販売済みへ。在庫なしなら欠品処理を行う</li>
+              <li>※日付がスキャンできない場合は、手動で入力できます</li>
+              <li>廃棄と値引きを分けてホワイトボード下のオリコンに入れる</li>
+            </ul>
+            <h4>無線機（金額調べ）</h4>
+            <ul>
+              <li>事務室で起動し、売価チェックでスキャン</li>
+              <li>右側が税抜実売価格</li>
+            </ul>
+            <h4>内線</h4>
+            <ul>
+              <li>番号を押して受話器を取る</li>
+              <li>例: ナイトマネージャーは <strong>211</strong></li>
+              <li>例: ドライチーフは <strong>206</strong></li>
+            </ul>
+            <h4>POP作り</h4>
+            <ul>
+              <li>左から順にLB8、LB7、LB6、下にLB5の用紙が入ってる</li>
+              <li>この機械で実売価格も確認できるので、急ぎの場合は使う</li>
+            </ul>
+            <div class="manual-tip">手順: 裏返しにして、緑の線を右側にしてプリンターに置く → バーコード検索から商品をスキャン → LB〇のカードを選択して印刷</div>
+            <h4>商品の廃棄</h4>
+            <p><strong>廃棄</strong>（賞味期限切れの商品）</p>
+            <div class="manual-tip">値下発行 → 廃棄 → 個数 → スキャン → 電源オフ</div>
+            <p><strong>雑損</strong>（予期せぬトラブルの商品：店員による破損、お客様による破損、その他）</p>
+            <ul>
+              <li>検収室の机の上に置くだけ（心配ならホワイトボードにメモ）</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </section>
     <div id="settings-modal" class="settings-modal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="settings-title">
       <div class="settings-modal-content">
         <h2 id="settings-title" class="settings-modal-title">設定</h2>
@@ -63,6 +330,7 @@
           <input type="checkbox" id="theme-toggle" style="width:1.2em; height:1.2em; vertical-align:middle;">
         </div>
         <button id="chatbot-btn" class="reset-btn" aria-label="チャットサポート">チャットサポート(開発途中)</button>
+        <button id="manual-btn" class="manual-btn" aria-label="マニュアル">📖 マニュアル</button>
         <button id="reset-btn" class="reset-btn" aria-label="タスクリセット">タスクリセット</button>
         <div class="settings-modal-logo">
           <img src="KUTSUZAWA_rogo.jpg" alt="KUTSUZAWAロゴ" loading="lazy">

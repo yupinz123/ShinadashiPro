@@ -604,30 +604,51 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   // チャットサポートボタン
   document.getElementById('chatbot-btn').onclick = () => {
-    // 設定モーダルを閉じる
     document.getElementById('settings-modal').style.display = 'none';
-    // 他のコンテンツを非表示
     document.getElementById('product-list').style.display = 'none';
     document.getElementById('task-list').style.display = 'none';
-    // チャットボットエリアを表示
+    document.getElementById('manual-area').style.display = 'none';
     document.getElementById('chatbot-area').style.display = '';
-    // タブとサブタブのactiveクラスをリセット
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.subtab').forEach(st => st.classList.remove('active'));
+    document.getElementById('filter-buttons').style.display = 'none';
+  };
+  // マニュアルボタン
+  document.getElementById('manual-btn').onclick = () => {
+    document.getElementById('settings-modal').style.display = 'none';
+    document.getElementById('product-list').style.display = 'none';
+    document.getElementById('task-list').style.display = 'none';
+    document.getElementById('chatbot-area').style.display = 'none';
+    document.getElementById('manual-area').style.display = '';
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.subtab').forEach(st => st.classList.remove('active'));
+    document.getElementById('filter-buttons').style.display = 'none';
+    document.getElementById('search-box').style.display = 'none';
+  };
+  // マニュアル閉じるボタン
+  document.getElementById('close-manual-btn').onclick = () => {
+    document.getElementById('manual-area').style.display = 'none';
+    document.getElementById('product-list').style.display = '';
+    document.getElementById('task-list').style.display = 'none';
+    document.getElementById('subtab-products').classList.add('active');
+    document.getElementById('subtab-tasks').classList.remove('active');
+    document.getElementById('tab-drinks').classList.add('active');
+    document.getElementById('search-box').style.display = '';
+    currentTab = 'drinks';
+    updateFilterButtons();
+    loadProducts(currentTab);
   };
   // チャットボット閉じるボタン
   document.getElementById('close-chatbot-btn').onclick = () => {
-    // チャットボットエリアを非表示
     document.getElementById('chatbot-area').style.display = 'none';
-    // 商品一覧を表示
     document.getElementById('product-list').style.display = '';
-    // タスク一覧は非表示のまま
     document.getElementById('task-list').style.display = 'none';
-    // サブタブの商品タブをアクティブに
     document.getElementById('subtab-products').classList.add('active');
     document.getElementById('subtab-tasks').classList.remove('active');
-    // メインタブ（飲料）をアクティブに戻す
     document.getElementById('tab-drinks').classList.add('active');
+    currentTab = 'drinks';
+    updateFilterButtons();
+    loadProducts(currentTab);
   };
   document.getElementById('reset-btn').onclick = () => {
   localStorage.removeItem('tasks');

@@ -424,7 +424,7 @@ main {
 #close-settings:hover {
   background: #B91C1C;
 }
-#reset-btn {
+#chatbot-btn {
   background: #3B82F6;
   color: #fff;
   border: none;
@@ -436,8 +436,168 @@ main {
   margin-top: 18px;
   transition: background 0.2s;
 }
-#reset-btn:hover {
+#chatbot-btn:hover {
   background: #2563EB;
+}
+
+/* --- マニュアルボタン --- */
+.manual-btn {
+  background: #10B981;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 18px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  transition: background 0.2s;
+}
+.manual-btn:hover {
+  background: #059669;
+}
+
+/* --- マニュアルエリア --- */
+.manual-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0 0.2rem;
+}
+.manual-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+.manual-header-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.manual-pdf-link {
+  background: var(--tab-inactive);
+  color: var(--text-secondary);
+  border-radius: 8px;
+  padding: 5px 12px;
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.manual-pdf-link:hover {
+  background: var(--tab-active);
+  color: #fff;
+}
+.close-manual-btn {
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.close-manual-btn:hover {
+  background: #dc2626;
+}
+.manual-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.manual-section {
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 1px 6px rgba(31,38,135,0.08);
+  overflow: hidden;
+}
+.manual-section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0.85rem 1rem;
+  cursor: pointer;
+  color: var(--text-primary);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.manual-section-title::after {
+  content: '▼';
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  transition: transform 0.2s;
+}
+.manual-section[open] > .manual-section-title::after {
+  transform: rotate(180deg);
+}
+.manual-section-title::-webkit-details-marker {
+  display: none;
+}
+.manual-section-body {
+  padding: 0 1rem 1rem 1rem;
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+.manual-section-body h4 {
+  margin: 0.8rem 0 0.4rem 0;
+  font-size: 0.95rem;
+  color: #3B82F6;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.2rem;
+}
+.manual-section-body ul,
+.manual-section-body ol {
+  padding-left: 1.3rem;
+  margin: 0.3rem 0;
+}
+.manual-section-body li {
+  margin-bottom: 0.3rem;
+}
+.manual-tip {
+  background: #EFF6FF;
+  border-left: 3px solid #3B82F6;
+  padding: 0.5rem 0.8rem;
+  margin: 0.5rem 0;
+  border-radius: 0 8px 8px 0;
+  font-size: 0.88rem;
+  color: #1e40af;
+}
+.manual-highlight {
+  background: #FEF3C7;
+  border-left: 3px solid #F59E0B;
+  padding: 0.5rem 0.8rem;
+  margin: 0.5rem 0;
+  border-radius: 0 8px 8px 0;
+  font-size: 0.88rem;
+  color: #92400E;
+}
+.manual-warning {
+  background: #FEE2E2;
+  border-left: 3px solid #EF4444;
+  padding: 0.5rem 0.8rem;
+  margin: 0.5rem 0;
+  border-radius: 0 8px 8px 0;
+  font-size: 0.88rem;
+  color: #991B1B;
+}
+/* ダークモード対応 */
+.dark-mode .manual-tip {
+  background: #1e3a5f;
+  color: #93c5fd;
+}
+.dark-mode .manual-highlight {
+  background: #422006;
+  color: #fcd34d;
+}
+.dark-mode .manual-warning {
+  background: #450a0a;
+  color: #fca5a5;
 }
 
 /* --- ページトップ・ロゴ --- */
@@ -526,16 +686,18 @@ main {
   height: auto;
   filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2));
 }
-.paper-cat-btn {
+.filter-btn {
   background: var(--tab-inactive);
   color: var(--text-secondary);
   border: none;
   border-radius: 8px;
   padding: 6px 10px;
   margin-right: 6px;
+  margin-bottom: 4px;
   cursor: pointer;
+  font-size: 0.85rem;
 }
-.paper-cat-btn.active {
+.filter-btn.active {
   background: var(--tab-active);
   color: #fff;
 }
