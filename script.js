@@ -8,6 +8,7 @@ let outOfStockItems = JSON.parse(localStorage.getItem('outOfStockItems') || '[]'
 let outOfStockCounts = JSON.parse(localStorage.getItem('outOfStockCounts') || '{}');
 let outOfStockRestoreStatus = JSON.parse(localStorage.getItem('outOfStockRestoreStatus') || '{}');
 window.searchKeyword = '';
+window.drinksLocationFilter = null;
 
 // --- CSV Utility ---
 function parseCSV(text) {
@@ -93,6 +94,8 @@ function renderProducts() {
     orderList = customPaperOrder.filter(loc => locationOrder.includes(loc)).concat(locationOrder.filter(loc => !customPaperOrder.includes(loc)));
   }
   orderList.forEach(location => {
+    // 飲料商品画面の陳列場所フィルタ
+    if (currentTab === 'drinks' && window.drinksLocationFilter && location !== window.drinksLocationFilter) return;
     const heading = document.createElement('h2');
     heading.className = 'location-heading';
     heading.textContent = location;
@@ -486,11 +489,47 @@ function loadTasks() {
   tasks = t ? JSON.parse(t) : [];
 }
 
+// --- フィルタボタン表示制御 ---
+function updateFilterButtons() {
+  const filterArea = document.getElementById('filter-buttons');
+  const drinksLocBtns = document.getElementById('drinks-loc-buttons');
+  const paperCatBtns = document.getElementById('paper-cat-buttons');
+  const searchBox = document.getElementById('search-box');
+  const isTaskView = document.getElementById('subtab-tasks').classList.contains('active');
+
+  // 全部非表示にリセット
+  filterArea.style.display = 'none';
+  drinksLocBtns.style.display = 'none';
+  paperCatBtns.style.display = 'none';
+  if (searchBox) searchBox.style.display = '';
+
+  if (currentTab === 'drinks' && !isTaskView) {
+    // 飲料の商品画面：陳列場所フィルタ表示
+    filterArea.style.display = '';
+    drinksLocBtns.style.display = '';
+  } else if (currentTab === 'paper' && isTaskView) {
+    // 紙類のタスク画面：カテゴリフィルタ表示、検索非表示
+    filterArea.style.display = '';
+    paperCatBtns.style.display = '';
+    if (searchBox) searchBox.style.display = 'none';
+  }
+  // 飲料タスク画面・紙類商品画面：フィルタ非表示（デフォルト）
+}
+
 // --- タブ切り替え ---
 function setTab(tab) {
   currentTab = tab;
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById(`tab-${tab}`).classList.add('active');
+  // タブ切替時にフィルタリセット
+  window.drinksLocationFilter = null;
+  window.paperCategoryFilter = null;
+  // フィルタボタンのactive状態リセット
+  document.querySelectorAll('.drinks-loc-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.drinks-loc-btn[data-loc="all"]').classList.add('active');
+  document.querySelectorAll('.paper-cat-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.paper-cat-btn[data-cat="all"]').classList.add('active');
+  updateFilterButtons();
   loadProducts(tab);
 }
 
@@ -523,41 +562,39 @@ document.addEventListener('DOMContentLoaded', () => {
   // タスクタブ表示制御
   document.getElementById('subtab-tasks').onclick = () => {
     document.getElementById('product-list').style.display = 'none';
-    document.querySelector('.task-tabs').style.display = '';
     document.getElementById('task-list').style.display = '';
     document.getElementById('subtab-products').classList.remove('active');
     document.getElementById('subtab-tasks').classList.add('active');
-    // 紙タブ時は検索を非表示にしてカテゴリボタンを表示（初期は全て）
-    const searchBox = document.getElementById('search-box');
-    const paperBtns = document.getElementById('paper-cat-buttons');
-    if (currentTab === 'paper') {
-      if (searchBox) searchBox.style.display = 'none';
-      if (paperBtns) paperBtns.style.display = '';
-      window.paperCategoryFilter = null; // 初期は全て
-    } else {
-      if (searchBox) searchBox.style.display = '';
-      if (paperBtns) paperBtns.style.display = 'none';
-    }
+    updateFilterButtons();
+    renderTasks();
   };
   document.getElementById('subtab-products').onclick = () => {
     document.getElementById('product-list').style.display = '';
-    document.querySelector('.task-tabs').style.display = 'none';
     document.getElementById('task-list').style.display = 'none';
     document.getElementById('subtab-products').classList.add('active');
     document.getElementById('subtab-tasks').classList.remove('active');
+    updateFilterButtons();
   };
+  // 飲料陳列場所ボタンのクリックイベント
+  document.querySelectorAll('.drinks-loc-btn').forEach(b => {
+    b.addEventListener('click', (e) => {
+      const loc = e.currentTarget.getAttribute('data-loc');
+      window.drinksLocationFilter = loc === 'all' ? null : loc;
+      document.querySelectorAll('.drinks-loc-btn').forEach(x => x.classList.remove('active'));
+      e.currentTarget.classList.add('active');
+      renderProducts();
+    });
+  });
   // 紙カテゴリボタン群のクリックイベント
-  const paperBtns = document.querySelectorAll('.paper-cat-btn');
-  if (paperBtns) {
-    paperBtns.forEach(b => b.addEventListener('click', (e) => {
+  document.querySelectorAll('.paper-cat-btn').forEach(b => {
+    b.addEventListener('click', (e) => {
       const cat = e.currentTarget.getAttribute('data-cat');
       window.paperCategoryFilter = cat === 'all' ? null : cat;
-      // 見た目のactive付け
-      paperBtns.forEach(x => x.classList.remove('active'));
+      document.querySelectorAll('.paper-cat-btn').forEach(x => x.classList.remove('active'));
       e.currentTarget.classList.add('active');
       renderTasks();
-    }));
-  }
+    });
+  });
   // 設定ボタン
   document.getElementById('settings-btn').onclick = () => {
     document.getElementById('settings-modal').style.display = 'flex';
@@ -604,19 +641,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // タブ
   document.getElementById('tab-drinks').onclick = () => setTab('drinks');
   document.getElementById('tab-paper').onclick = () => setTab('paper');
-  // サブタブ
-  document.getElementById('subtab-products').onclick = () => {
-    document.getElementById('product-list').style.display = '';
-    document.getElementById('task-list').style.display = 'none';
-    document.getElementById('subtab-products').classList.add('active');
-    document.getElementById('subtab-tasks').classList.remove('active');
-  };
-  document.getElementById('subtab-tasks').onclick = () => {
-    document.getElementById('product-list').style.display = 'none';
-    document.getElementById('task-list').style.display = '';
-    document.getElementById('subtab-products').classList.remove('active');
-    document.getElementById('subtab-tasks').classList.add('active');
-  };
   // 検索ボックス
   const searchBox = document.getElementById('search-box');
   if (searchBox) {

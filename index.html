@@ -23,11 +23,24 @@
         <button id="settings-btn" class="settings-btn" title="設定" aria-label="設定"><span aria-hidden="true">⚙️</span></button>
       </div>
       <input type="search" id="search-box" placeholder="商品名で検索" autocomplete="off" aria-label="商品名検索">
-      <div id="paper-cat-buttons" style="display:none; margin-left:8px;">
-        <button class="paper-cat-btn" data-cat="all">全て</button>
-        <button class="paper-cat-btn" data-cat="キッチン">キッチン</button>
-        <button class="paper-cat-btn" data-cat="ティッシュ">ティッシュ</button>
-        <button class="paper-cat-btn" data-cat="トイレットペーパー">トイレットペーパー</button>
+      <div id="filter-buttons" style="display:none; margin-left:8px;">
+        <!-- 飲料商品画面用：陳列場所フィルタ -->
+        <div id="drinks-loc-buttons" style="display:none;">
+          <button class="filter-btn drinks-loc-btn active" data-loc="all">全て</button>
+          <button class="filter-btn drinks-loc-btn" data-loc="冷通常飲料">冷通常飲料</button>
+          <button class="filter-btn drinks-loc-btn" data-loc="冷大型飲料">冷大型飲料</button>
+          <button class="filter-btn drinks-loc-btn" data-loc="通常大型飲料">通常大型飲料</button>
+          <button class="filter-btn drinks-loc-btn" data-loc="通常飲料棚">通常飲料棚</button>
+          <button class="filter-btn drinks-loc-btn" data-loc="エンド中央">エンド中央</button>
+          <button class="filter-btn drinks-loc-btn" data-loc="トマト棚">トマト棚</button>
+        </div>
+        <!-- 紙タスク画面用：カテゴリフィルタ -->
+        <div id="paper-cat-buttons" style="display:none;">
+          <button class="filter-btn paper-cat-btn active" data-cat="all">全て</button>
+          <button class="filter-btn paper-cat-btn" data-cat="キッチン">キッチン</button>
+          <button class="filter-btn paper-cat-btn" data-cat="ティッシュ">ティッシュ</button>
+          <button class="filter-btn paper-cat-btn" data-cat="トイレットペーパー">トイレットペーパー</button>
+        </div>
       </div>
     </div>
     <section id="product-list" class="product-list" aria-label="商品一覧"></section>
@@ -49,7 +62,7 @@
           <label for="theme-toggle" style="font-weight:600; color:#2563eb; margin-right:0.7rem;">ダークモード</label>
           <input type="checkbox" id="theme-toggle" style="width:1.2em; height:1.2em; vertical-align:middle;">
         </div>
-        <button id="chatbot-btn" class="reset-btn" aria-label="チャットサポート">チャットサポート</button>
+        <button id="chatbot-btn" class="reset-btn" aria-label="チャットサポート">チャットサポート(開発途中)</button>
         <button id="reset-btn" class="reset-btn" aria-label="タスクリセット">タスクリセット</button>
         <div class="settings-modal-logo">
           <img src="KUTSUZAWA_rogo.jpg" alt="KUTSUZAWAロゴ" loading="lazy">
