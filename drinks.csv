@@ -96,6 +96,7 @@ d84,綾鷹 茶葉のあまみ 2L,https://mrmax.jp/static_files/product_images/49
 d85,綾鷹 2L,https://mrmax.jp/static_files/product_images/4902102112208_01.jpg,大型飲料,冷大型飲料,0,,94
 d86,サントリー 烏龍茶 2L,https://thumbnail.image.rakuten.co.jp/@0_mall/felicity-wine/cabinet/img001/suf0023_1.jpg?_ex=300x300,大型飲料,冷大型飲料,0,,95
 d87,アクエリアス 2L,https://imgix.cainz.com/4902102113731/product/4902102113731_01.jpg,大型飲料,冷大型飲料,0,,96
+d87.1,カルピスソーダ 1.5L,https://item-shopping.c.yimg.jp/i/n/felicity-y_ass0110,大型飲料,通常大型飲料,0,,96.1
 d88,カルピスウォーター 1.5L,https://www.miraido-onlineshop.com/images/item/original/ass0104_1.jpg,大型飲料,通常大型飲料,0,,97
 d89,キリンレモン 1.5L,https://item-shopping.c.yimg.jp/i/n/d-felicity_kib0180_i_20230729173612,大型飲料,通常大型飲料,0,,98
 d90,午後の紅茶 おいしい無糖,https://cdn.askul.co.jp/img/product/3L1/P714715_3L1.jpg,大型飲料,通常大型飲料,0,,99
@@ -111,7 +112,6 @@ d99,なっちゃん オレンジ 1.5L,https://item-shopping.c.yimg.jp/i/n/felici
 d100,CCレモン 1.5L,https://www.miraido-onlineshop.com/images/item/original/suf0092_1.jpg,大型飲料,通常大型飲料,0,,109
 d80,三ツ矢サイダー 1.5L,"https://netsuper.r10s.jp/item/beisia/09/4514603217209.jpg?fit=inside|630:630&composite-to=*,*|630:630&background-color=white",大型飲料,通常大型飲料,0,,110
 d102,カナダドライ ジンジャーエール 1.5L,https://item-shopping.c.yimg.jp/i/n/liquor-boss1_3524c2,大型飲料,通常大型飲料,0,,111
-d103,カルピスソーダ 1.5L,https://item-shopping.c.yimg.jp/i/n/felicity-y_ass0110,大型飲料,通常大型飲料,0,,112
 d104,ファンタ オレンジ 1.5L,https://item-shopping.c.yimg.jp/i/n/shimamotoya_cola-fantaorange1500ml1case,大型飲料,通常大型飲料,0,,113
 d105,ファンタ グレープ 1.5L,https://item-shopping.c.yimg.jp/i/n/shimamotoya_cola-fantagrape1500ml2case,大型飲料,通常大型飲料,0,,114
 d106,COOP 烏龍茶 2L,https://goods.jccu.coop/lineup/com-images/00181024.jpg,大型飲料,通常大型飲料,0,,115
@@ -161,9 +161,9 @@ d149,KEY DOORS+ リキッドコーヒー 微糖 テトラプリズマ 1L,https:/
 d150,KEY DOORS+ リキッドコーヒー 無糖 テトラプリズマ 1L,https://www.keycoffee.co.jp/cms/img/products/other/products2403_liquid_tetra_mutou.jpg,コーヒー,通常飲料棚,0,,159
 d151,職人の珈琲 無糖 PET900ml,https://www.ucc.co.jp/product/drink/coffee/meister/leqtmq0000000htw-img/meister-no-sugar.jpg,コーヒー,通常飲料棚,0,,160
 d152,職人の珈琲 低糖 PET900ml,https://www.ucc.co.jp/product/drink/coffee/meister/leqtmq0000000hv3-img/meister-low-sugar.jpg,コーヒー,通常飲料棚,0,,161
-d153,ネスカフェ エクセラ ボトルコーヒー 無糖 900ml,https://nestle.jp/home/brands/nescafe/sites/default/files/2024-03/012583612.png,コーヒー,通常飲料棚,0,,162
-d154,ネスカフェ エクセラ ボトルコーヒー 甘さひかえめ 900ml,https://nestle.jp/home/brands/nescafe/sites/default/files/2024-03/012579826_0.png,コーヒー,通常飲料棚,0,,163
-d155,ネスカフェ エクセラ ボトルコーヒー ゼロ 900ml,https://nestle.jp/home/brands/nescafe/sites/default/files/2024-03/012580284.png,コーヒー,通常飲料棚,0,,164
+d153,ネスカフェ エクセラ ボトルコーヒー 無糖 900ml,https://nescafe.nestle.jp/sites/default/files/styles/pdp_banner_image/public/2025-06/012583612_0.png.webp?itok=3wW0PgIr,コーヒー,通常飲料棚,0,,162
+d154,ネスカフェ エクセラ ボトルコーヒー 甘さひかえめ 900ml,https://nescafe.nestle.jp/sites/default/files/styles/pdp_banner_image/public/2025-06/012579826.png.webp?itok=U2PfLAOd,コーヒー,通常飲料棚,0,,163
+d155,ネスカフェ エクセラ ボトルコーヒー ゼロ 900ml,https://nescafe.nestle.jp/sites/default/files/styles/pdp_banner_image/public/2025-06/012580284_2.png.webp?itok=K_g697Ni,コーヒー,通常飲料棚,0,,164
 d128,COOP ただの炭酸水（天然水使用）1L,https://goods.jccu.coop/lineup/com-images/00226660.jpg,大型飲料,エンド中央,0,,165
 d70,COOP ただの炭酸水（天然水使用）500ml,https://goods.jccu.coop/lineup/com-images/00230430.jpg,炭酸,エンド中央,0,,166
 d142,サントリー 天然水 2L,https://tse1.mm.bing.net/th/id/OIP.txyye_NKYCODhqowPP0gwwHaHa?cb=thfc1&rs=1&pid=ImgDetMain&o=7&rm=3,水,エンド中央,0,,167
