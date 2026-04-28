@@ -533,6 +533,26 @@ function setTab(tab) {
   loadProducts(tab);
 }
 
+function hideAuxiliaryAreas() {
+  document.getElementById('chatbot-area').style.display = 'none';
+  document.getElementById('manual-area').style.display = 'none';
+  document.getElementById('instruction-area').style.display = 'none';
+}
+
+function restoreDefaultView() {
+  hideAuxiliaryAreas();
+  document.getElementById('product-list').style.display = '';
+  document.getElementById('task-list').style.display = 'none';
+  document.getElementById('subtab-products').classList.add('active');
+  document.getElementById('subtab-tasks').classList.remove('active');
+  document.getElementById('tab-drinks').classList.add('active');
+  document.getElementById('tab-paper').classList.remove('active');
+  document.getElementById('search-box').style.display = '';
+  currentTab = 'drinks';
+  updateFilterButtons();
+  loadProducts(currentTab);
+}
+
 // --- 初期化 ---
 document.addEventListener('DOMContentLoaded', () => {
   // ダーク/ライトモード初期化
@@ -607,19 +627,32 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('settings-modal').style.display = 'none';
     document.getElementById('product-list').style.display = 'none';
     document.getElementById('task-list').style.display = 'none';
-    document.getElementById('manual-area').style.display = 'none';
+    hideAuxiliaryAreas();
     document.getElementById('chatbot-area').style.display = '';
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.subtab').forEach(st => st.classList.remove('active'));
     document.getElementById('filter-buttons').style.display = 'none';
+    document.getElementById('search-box').style.display = 'none';
   };
   // マニュアルボタン
   document.getElementById('manual-btn').onclick = () => {
     document.getElementById('settings-modal').style.display = 'none';
     document.getElementById('product-list').style.display = 'none';
     document.getElementById('task-list').style.display = 'none';
-    document.getElementById('chatbot-area').style.display = 'none';
+    hideAuxiliaryAreas();
     document.getElementById('manual-area').style.display = '';
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.subtab').forEach(st => st.classList.remove('active'));
+    document.getElementById('filter-buttons').style.display = 'none';
+    document.getElementById('search-box').style.display = 'none';
+  };
+  // 取扱説明書ボタン
+  document.getElementById('instruction-btn').onclick = () => {
+    document.getElementById('settings-modal').style.display = 'none';
+    document.getElementById('product-list').style.display = 'none';
+    document.getElementById('task-list').style.display = 'none';
+    hideAuxiliaryAreas();
+    document.getElementById('instruction-area').style.display = '';
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.subtab').forEach(st => st.classList.remove('active'));
     document.getElementById('filter-buttons').style.display = 'none';
@@ -627,28 +660,15 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   // マニュアル閉じるボタン
   document.getElementById('close-manual-btn').onclick = () => {
-    document.getElementById('manual-area').style.display = 'none';
-    document.getElementById('product-list').style.display = '';
-    document.getElementById('task-list').style.display = 'none';
-    document.getElementById('subtab-products').classList.add('active');
-    document.getElementById('subtab-tasks').classList.remove('active');
-    document.getElementById('tab-drinks').classList.add('active');
-    document.getElementById('search-box').style.display = '';
-    currentTab = 'drinks';
-    updateFilterButtons();
-    loadProducts(currentTab);
+    restoreDefaultView();
+  };
+  // 取扱説明書閉じるボタン
+  document.getElementById('close-instruction-btn').onclick = () => {
+    restoreDefaultView();
   };
   // チャットボット閉じるボタン
   document.getElementById('close-chatbot-btn').onclick = () => {
-    document.getElementById('chatbot-area').style.display = 'none';
-    document.getElementById('product-list').style.display = '';
-    document.getElementById('task-list').style.display = 'none';
-    document.getElementById('subtab-products').classList.add('active');
-    document.getElementById('subtab-tasks').classList.remove('active');
-    document.getElementById('tab-drinks').classList.add('active');
-    currentTab = 'drinks';
-    updateFilterButtons();
-    loadProducts(currentTab);
+    restoreDefaultView();
   };
   document.getElementById('reset-btn').onclick = () => {
   localStorage.removeItem('tasks');

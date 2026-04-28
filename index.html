@@ -55,10 +55,10 @@
       allow="microphone">
     </iframe>
     </section>
-    <!-- マニュアルエリア -->
+    <!-- 仕事マニュアルエリア -->
     <section id="manual-area" style="display:none" aria-label="業務マニュアル">
       <div class="manual-header">
-        <h2 class="manual-title">📖 ドライマニュアル</h2>
+        <h2 class="manual-title">📖 ドライ仕事マニュアル</h2>
         <div class="manual-header-buttons">
           <a href="バイトマニュアル.pdf" target="_blank" class="manual-pdf-link">PDF版を開く</a>
           <button id="close-manual-btn" class="close-manual-btn" aria-label="閉じる">✕</button>
@@ -322,6 +322,124 @@
         </details>
       </div>
     </section>
+    <section id="instruction-area" style="display:none" aria-label="取扱説明書">
+      <div class="manual-header">
+        <h2 class="manual-title">🛠️ 取扱説明書</h2>
+        <div class="manual-header-buttons">
+          <a href="取扱説明書.pdf" target="_blank" class="manual-pdf-link">PDF版を開く</a>
+          <button id="close-instruction-btn" class="close-manual-btn" aria-label="閉じる">✕</button>
+        </div>
+      </div>
+      <div class="manual-content">
+        <section class="instruction-overview" aria-label="取扱説明書の概要">
+          <article class="instruction-card">
+            <span class="instruction-card-icon" aria-hidden="true">🛒</span>
+            <h3>商品画面</h3>
+            <p>商品画像を押してタスク追加、検索や陳列場所フィルタで必要な商品を絞り込めます。</p>
+          </article>
+          <article class="instruction-card">
+            <span class="instruction-card-icon" aria-hidden="true">📋</span>
+            <h3>タスク画面</h3>
+            <p>追加した商品を運搬済・未運搬・削除で整理できます。飲料と紙類で表示方法が一部異なります。</p>
+          </article>
+          <article class="instruction-card">
+            <span class="instruction-card-icon" aria-hidden="true">⚙️</span>
+            <h3>設定メニュー</h3>
+            <p>右上の設定から、マニュアル、取扱説明書、チャットサポート、タスクリセット、ダークモード切替を行います。</p>
+          </article>
+        </section>
+        <details class="manual-section" open>
+          <summary class="manual-section-title">基本の使い方</summary>
+          <div class="manual-section-body">
+            <div class="instruction-steps">
+              <div class="instruction-step">
+                <span class="instruction-step-number">1</span>
+                <div>
+                  <strong>上段タブでカテゴリを選ぶ</strong>
+                  <p>「飲料」「紙類」を押すと表示データが切り替わります。初期表示は飲料です。</p>
+                </div>
+              </div>
+              <div class="instruction-step">
+                <span class="instruction-step-number">2</span>
+                <div>
+                  <strong>下段タブで画面を切り替える</strong>
+                  <p>「商品」で商品一覧、「タスク」で追加済み商品一覧を表示します。</p>
+                </div>
+              </div>
+              <div class="instruction-step">
+                <span class="instruction-step-number">3</span>
+                <div>
+                  <strong>必要な商品を登録して管理する</strong>
+                  <p>商品画面でタスクを追加し、タスク画面で進捗を更新します。迷った時は上のPDF版も確認できます。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+        <details class="manual-section">
+          <summary class="manual-section-title">商品画面の使い方</summary>
+          <div class="manual-section-body">
+            <div class="manual-tip">商品画像を短く押すと、その商品がタスクに1件追加されます。追加数は商品カード内に即時反映されます。</div>
+            <ul>
+              <li>検索欄では商品名で絞り込みできます。飲料タスク画面では検索も反映されます</li>
+              <li>飲料の「商品」画面では、陳列場所フィルタで棚の場所ごとに表示を切り替えられます</li>
+              <li>紙類の「商品」画面ではフィルタは表示されず、一覧から直接追加します</li>
+              <li>商品画像を長押しするとGoogle検索が開きます。画像確認したい時に使います</li>
+              <li>飲料で在庫無にした商品は商品一覧で薄く表示され、通常操作できなくなります</li>
+            </ul>
+          </div>
+        </details>
+        <details class="manual-section">
+          <summary class="manual-section-title">タスク画面の使い方</summary>
+          <div class="manual-section-body">
+            <div class="manual-highlight">飲料タスクはカテゴリごと、紙類タスクは同一商品をまとめて表示します。運搬済商品は下部にまとまります。</div>
+            <ul>
+              <li>「運搬済」ボタンを押すと、その商品は運搬済商品欄へ移動します</li>
+              <li>飲料の「未運搬」ボタンは未運搬欄へ移動します。未運搬欄で再度押すと在庫無として扱われます</li>
+              <li>飲料の在庫無商品は「タスクに戻す」で元の件数ぶんタスクへ復元できます</li>
+              <li>紙類タスクの「運搬済」は1回押すごとに1件分だけ進み、件数表示が更新されます</li>
+              <li>「削除」はそのタスク、または紙類では同一商品のまとまりごと削除します</li>
+            </ul>
+          </div>
+        </details>
+        <details class="manual-section">
+          <summary class="manual-section-title">各ボタンの動作</summary>
+          <div class="manual-section-body">
+            <h4>上部操作</h4>
+            <ul>
+              <li>「飲料」「紙類」: 表示カテゴリを切り替え、フィルタ状態も初期化します</li>
+              <li>「商品」「タスク」: 商品一覧とタスク一覧を切り替えます</li>
+              <li>右上の設定ボタン: 設定メニューを開きます</li>
+            </ul>
+            <h4>設定メニュー内</h4>
+            <ul>
+              <li>「ダークモード」: 画面配色を切り替え、状態を保存します</li>
+              <li>「チャットサポート(開発途中)」: チャット画面を開きます</li>
+              <li>「業務マニュアル」: 業務マニュアル画面を開きます</li>
+              <li>「取扱説明書」: この取扱説明書画面を開きます</li>
+              <li>「タスクリセット」: 登録済みタスクと在庫無情報を消去します</li>
+            </ul>
+            <h4>補助ボタン</h4>
+            <ul>
+              <li>各マニュアル画面の「PDF版を開く」: 対応するPDFファイルを新しいタブで開きます</li>
+              <li>各画面の「✕」: 商品一覧の初期状態へ戻ります</li>
+              <li>右下の「↑」: ページ上部へスクロールします</li>
+            </ul>
+          </div>
+        </details>
+        <details class="manual-section">
+          <summary class="manual-section-title">補足と注意点</summary>
+          <div class="manual-section-body">
+            <div class="manual-warning">タスクリセットを押すと、現在のタスク一覧と在庫無情報が消えます。操作前に必要な確認をしてください。</div>
+            <ul>
+              <li>紙類のタスク画面では検索欄は表示されず、カテゴリフィルタのみ使えます</li>
+              <li>チャットサポート、業務マニュアル、取扱説明書を開いている間は通常の商品一覧は非表示になります</li>
+              <li>さらに細かい仕様確認が必要な場合は、上部の「PDF版を開く」から正式版を参照してください</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </section>
     <div id="settings-modal" class="settings-modal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="settings-title">
       <div class="settings-modal-content">
         <h2 id="settings-title" class="settings-modal-title">設定</h2>
@@ -330,7 +448,8 @@
           <input type="checkbox" id="theme-toggle" style="width:1.2em; height:1.2em; vertical-align:middle;">
         </div>
         <button id="chatbot-btn" class="reset-btn" aria-label="チャットサポート">チャットサポート(開発途中)</button>
-        <button id="manual-btn" class="manual-btn" aria-label="マニュアル">📖 マニュアル</button>
+        <button id="manual-btn" class="manual-btn" aria-label="マニュアル">業務マニュアル</button>
+        <button id="instruction-btn" class="manual-btn instruction-btn" aria-label="取扱説明書">取扱説明書</button>
         <button id="reset-btn" class="reset-btn" aria-label="タスクリセット">タスクリセット</button>
         <div class="settings-modal-logo">
           <img src="KUTSUZAWA_rogo.jpg" alt="KUTSUZAWAロゴ" loading="lazy">
